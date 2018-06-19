@@ -10,7 +10,6 @@ triangle_square = 0.5 * main_side * height
 
 if main_side <= 0 || height <= 0
   puts "Введённые данные не корректны для вычисления площади треугольника."
-
 else
   puts "Площадь треугольника с основанием #{main_side} и высотой #{height} = #{triangle_square}"
 end

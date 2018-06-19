@@ -9,33 +9,24 @@ side2 = gets.to_f
 puts "Введите сторону 3:"
 side3 = gets.to_f
 
-if side1 <= 0 || side2 <= 0 || side3 <= 0
-  abort "Ваши входные данные некорректны! Это не треугольник."
-end
+abort "Ваши входные данные некорректны! Это не треугольник." if side1 <= 0 || side2 <= 0 || side3 <= 0
 
-if side1 == side2 && side2 == side3
-  abort "Этот замечательный треугольник идеален как кусок итальянской пиццы - он равносторонний и равнобедренный."
-end
+abort "Этот замечательный треугольник идеален как кусок итальянской пиццы - он равносторонний и равнобедренный." if side1 == side2 && side2 == side3
 
-Sides = [side1, side2, side3]
-Sides.sort! {|x,y| x <=> y }
+sides = [side1, side2, side3]
+sides.sort!
 
-gipotinuza = Sides[2]
-pifagor_side1 = Sides[0]
-pifagor_side2 = Sides[1]
+pifagor_power = sides[0]**2 + sides[1]**2
+sides[2] = sides[2]**2
 
-pifagor_power = pifagor_side1**2 + pifagor_side2**2
-gipotinuza_2 = gipotinuza**2
+rectangular = pifagor_power == sides[2]
 
-if pifagor_power == gipotinuza_2 && pifagor_side1 == pifagor_side2
+if rectangular && sides[0] == sides[1]
   puts "Шок! Этот треугольник оказался не так уж и прост - он не только прямоугольный, но и равнобедренный."
-
-elsif pifagor_power == gipotinuza_2
+elsif rectangular
   puts "Ваш треугольник оказался прямоугольным, поздравляю! Пифагор бы Вами гордился."
-
-elsif pifagor_side1 == pifagor_side2
+elsif sides[0] == sides[1]
   puts "Ваш треугольник просто равнобедренный."
-
 else
   puts "Ваш треугольник не прямоугольный, не равнобедренный и не равносторонний."
 end

@@ -11,8 +11,7 @@ height = gets.to_f
 ideal_weight = height - const_height
 
 if ideal_weight > 0
-  puts "#{name}, ваш идеальный вес = #{ideal_weight}"
-  
+  puts "#{name}, ваш идеальный вес = #{ideal_weight}"  
 else
   puts "#{name}, ваш текущий вес уже считается идеальным"
 end
