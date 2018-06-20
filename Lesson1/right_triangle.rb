@@ -1,25 +1,27 @@
 #Прямоугольный треугольник
 
+sides = []
+
 puts "Введите сторону 1:"
-side1 = gets.to_f
+sides[0] = gets.to_f
 
 puts "Введите сторону 2:"
-side2 = gets.to_f
+sides[1] = gets.to_f
 
 puts "Введите сторону 3:"
-side3 = gets.to_f
+sides[2] = gets.to_f
 
-abort "Ваши входные данные некорректны! Это не треугольник." if side1 <= 0 || side2 <= 0 || side3 <= 0
+if sides[0] <= 0 || sides[1] <= 0 || sides[2] <= 0
+  abort "Ваши входные данные некорректны! Это не треугольник."
+end
 
-abort "Этот замечательный треугольник идеален как кусок итальянской пиццы - он равносторонний и равнобедренный." if side1 == side2 && side2 == side3
+if sides[0] == sides[1] && sides[1] == sides[2]
+  abort "Этот замечательный треугольник идеален как кусок итальянской пиццы - он равносторонний и равнобедренный."
+end
 
-sides = [side1, side2, side3]
 sides.sort!
 
-pifagor_power = sides[0]**2 + sides[1]**2
-sides[2] = sides[2]**2
-
-rectangular = pifagor_power == sides[2]
+rectangular = sides[2]**2 == sides[0]**2 + sides[1]**2
 
 if rectangular && sides[0] == sides[1]
   puts "Шок! Этот треугольник оказался не так уж и прост - он не только прямоугольный, но и равнобедренный."
