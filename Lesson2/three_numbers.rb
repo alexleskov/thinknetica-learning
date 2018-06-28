@@ -18,7 +18,6 @@ months = {
 
 year_normal = 365
 count_days = 0
-last_month = months.length
 
 puts "Введите число:"
 day = gets.to_i
@@ -29,8 +28,8 @@ month = gets.to_i
 puts "Введите год:"
 year = gets.to_i
 
-for i in month..last_month
-  count_days = (months[i][:days] + count_days)
+for i in month..months.keys.last
+  count_days = months[i][:days] + count_days
 end
 
 count_days = (year_normal - count_days) + day

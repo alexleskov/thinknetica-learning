@@ -4,7 +4,7 @@ massif = [0,1]
 n = 2
 
 until massif.last >= 100 do
-  massif << (massif[n-1] + massif[n-2])
+  massif << massif[n-1] + massif[n-2]
   n += 1
 end
 
