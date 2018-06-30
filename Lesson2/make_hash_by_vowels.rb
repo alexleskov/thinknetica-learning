@@ -2,12 +2,10 @@
 
 alphabet = ('a'..'z')
 vowels = ['a','e','i','o','u']
-hash = Hash.new
-number = 0
+hash = {}
 
-for letter in alphabet
-  number += 1
-  hash[letter] = number if vowels.include? letter
-end
+alphabet.each.with_index(1) { |letter, index|
+  hash[letter] = index if vowels.include? letter
+}
 
 puts "Hash: #{hash}"
