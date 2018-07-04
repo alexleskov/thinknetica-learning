@@ -1,6 +1,6 @@
 #Сумма покупок
 
-bill = Hash.new
+bill = {}
 stop_phrase = 'Стоп'
 product_num = 0
 summary = 0
@@ -17,9 +17,7 @@ loop do
   puts "Количество товара:"
   product_count = gets.to_i
 
-  bill.merge!({ product_name => {cost: cost_by_one, count: product_count} })
-  product_num +=1
-  product_name += product_num.to_s
+  bill[product_name] = { cost: cost_by_one, count: product_count }
 end
 
 bill.each do |product_name, properties|
