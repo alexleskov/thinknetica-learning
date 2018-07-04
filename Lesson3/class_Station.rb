@@ -2,7 +2,7 @@ class Station
   attr_accessor :train_number
   attr_accessor :vagon_type
   attr_accessor :vagon_count
-
+  
   def initialize(station_name)
     @station_name = station_name
     @train_list = {}
