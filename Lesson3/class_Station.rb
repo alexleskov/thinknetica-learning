@@ -10,7 +10,7 @@ class Station
     puts "Добавлена новая станция: '#{station_name}'."
   end
 
-  def get_train(train_number, vagon_type, vagon_count)
+  def train_get(train_number, vagon_type, vagon_count)
     if @station.include?(train_number)
       puts "Этот поезд уже находится на станции '#{@@station_name}'."
     else
@@ -20,7 +20,7 @@ class Station
     end
   end
 
-  def list_all_trains
+  def trains_show_all
     puts "Список всех поездов на станции #{@@station_name}:" if @trains_count != 0
     @station.each do |train_number, info|
       puts " * Номер поезда: #{train_number}, тип: #{info[:type]}, количество вагонов: #{info[:count]}."
