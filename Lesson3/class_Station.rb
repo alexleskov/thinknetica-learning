@@ -39,7 +39,3 @@ class Station
     end
   end
 end
-
-station1 = Station.new("TheFirst")
-train1 = station1.get_train(1, "Пассажирский", 20)
-train2 = station1.get_train(2, "Грузовой", 10)
