@@ -1,10 +1,12 @@
 class Route
-  def initialize(station_begin, station_end)
-    @route = [station_begin, station_end]
-    puts "Маршрут со станции '#{station_begin}', до станции '#{station_end}' создан."
+  attr_reader :route
+
+  def initialize(departure, arrival)
+    @route = [departure, arrival]
+    puts "Маршрут со станции '#{departure}', до станции '#{arrival}' создан."
   end
 
-  def route_add(transit_station)
+  def station_add(transit_station)
     if @route.include?(transit_station)
       print "Такая станция уже есть в маршруте."
     else
@@ -13,7 +15,7 @@ class Route
     end
   end
 
-  def route_remove(remove_station)
+  def station_remove(remove_station)
     if @route.include?(remove_station)
       @route.delete(remove_station)
       puts "Станция '#{remove_station}' удалена из маршрута."
@@ -22,8 +24,9 @@ class Route
     end
   end
 
-  def route_show
-    puts "Маршрут:"
+  def show
+    print "Маршрут следования: "
     @route.each { |station_name| print "[#{station_name}]-" }
   end
+
 end
