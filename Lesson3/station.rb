@@ -1,48 +1,67 @@
 class Station
   attr_reader :name
 
-  @@list = []
+  @@stations_list = []
 
-  def initialize(name)
+  def initialize(name, trains_count = 0)
     @name = name
+    @@stations_list << @name
     @train_list = {}
-    @@list << @name
-    @trains_count = 0
+    @trains_count = trains_count
     puts "Добавлена новая станция: '#{@name}'."
   end
 
-  def receive_on(train_number, vagon_type, vagon_count)
-    if @train_list.include?(train_number)
-      puts "Этот поезд уже находится на станции '#{@name}'."
-    else
-      @train_list[train_number] = { type: vagon_type, count: vagon_count }
+  def receive_on(train)
+    if train.class == Train && !@train_list.include?(train.number)
+      @train_number = train.number
+      @train_list[@train_number] = { type: train.type, vagon_count: train.vagon_count }
       @trains_count += 1
-      puts "Поезд с номером '#{train_number}', тип '#{vagon_type}', количество вагонов #{vagon_count} - принят на станцию '#{@name}'."
+      puts "Поезд с номером '#{@train_number}', тип '#{@train_list[@train_number][:type]}', количество вагонов #{@train_list[@train_number][:vagon_count]} - принят на станцию '#{@name}'."
+    else
+      puts "Ошибка. Введенные данные не являются поездом, либо этот поезд уже есть на станции."
     end
   end
 
-  def trains_show
+  def forward_to(train)
+    if train.class == Train && @train_list.include?(train.number)
+      @train_number = train.number
+      @train_list.delete(@train_number)
+      @trains_count -= 1
+      puts "Поезд с номером '#{@train_number}' только что был отправлен со станции '#{@name}'."
+    else
+      puts "Ошибка. Введенные данные не являются поездом, либо этот поезд уже отсутствует на станции."
+    end
+  end
+
+  def list
     if @trains_count != 0
-      puts "Список всех поездов на станции #{@name}:"
-      @train_list.each do |train_number, info|
-        puts " * Номер поезда: #{train_number}, тип: #{info[:type]}, количество вагонов: #{info[:count]}."
+      puts "Список всех поездов на станции '#{@name}':"
+      @train_list.each do |number, info|
+        puts " * Номер поезда: #{number}, тип: #{info[:type]}, количество вагонов: #{info[:vagon_count]}."
         puts "--------------------------------------------------------"
       end
     end
     puts "Поездов на станции сейчас: #{@trains_count}."
   end
 
-  def forward_to(train_number)
-    if @train_list.include?(train_number)
-      @train_list.delete(train_number)
-      @trains_count -= 1
-      puts "Поезд с номером '#{train_number}' только что был отправлен со станции '#{@name}'."
-    else
-      puts "Поезда с таким номером нет на станции '#{@name}'."
+  def list_by_type
+    if @trains_count != 0
+      @passenger_count = 0
+      @cargo_count = 0
+      @train_list.each_value do |info|
+        if info[:type] == "passenger"
+          @passenger_count += 1
+        elsif info[:type] == "cargo"
+          @cargo_count += 1
+        end
+      end
+        puts "Количество пассажирских поездов: #{@passenger_count}.\nКоличество грузовых поездов: #{@cargo_count}."
+        puts "-----------------------------------"
     end
+        puts "Поездов на станции сейчас: #{@trains_count}."
   end
 
   def self.list
-    puts "Список всех станций: #{@@list}"
+    puts "Список всех станций: #{@@stations_list}"
   end
 end
