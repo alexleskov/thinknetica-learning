@@ -1,81 +1,88 @@
 class Train
-  attr_accessor(:number, :speed)
-  attr_reader :type
-  attr_reader :vagon_count
+  attr_reader(:type, :vagon_count, :speed, :number)
 
-  def initialize(number, type, vagon_count, speed = 0)
+  def initialize(number, type, vagon_count)
     @number = number
     @type = type
     @vagon_count = vagon_count
-    @speed = speed
+    @speed = 0
   end
 
-  def stop
-    @speed = 0
-    puts "Поезд с номером '#{@number}' остановлен. Скорость: #{@speed}."
+	def speed_up(value)
+		@speed += value
+	end
+
+  def speed_down(value)
+		@speed -= value if speed - value >= 0
   end
 
   def vagon_add
-    if @speed == 0
-      @vagon_count += 1
-      puts "К поезду с номером '#{@number}' добавлен ещё один вагон. Всего вагонов прицеплено: #{@vagon_count}."
-    else
-      puts "Поезд движется, нельзя прицепить вагон."
-    end
+    @vagon_count += 1 if speed == 0
   end
 
   def vagon_remove
-    if @vagon_count == 0 || @speed > 0
-      puts "Нельзя отцепить вагон."
-    else
-      @vagon_count -= 1
-      puts "У поезда с номером '#{@number}' отцеплён вагон. Всего вагонов прицеплено: #{@vagon_count}."
-    end
+    @vagon_count -= 1 if vagon_count != 0 && speed == 0
   end
 
-  def list
-    if @route_add != nil
-      puts "Маршрут поезда с номером '#{@number}': #{@route_add.route}."
-      puts "Предыдущая станция: '#{@previous_station}'. Текущая станция: '#{@current_station}'. Следующая станция: '#{@next_station}'."
-    end
-  end
+	def route_add(route)
+		if route.class == Route
+			@route = route
+			@route_stations = @route.StationS
+			@first_station = @route_stations.first
+			@last_station = @route_stations.last
+			@previous_station = @route_stations.rotate(-1).first
+			@next_station = @route_stations.rotate.first
+			self.initialize_route_list
+		end
+	end
 
-  def route_add=(route_add)
-    if route_add.class == Route
-      @route_add = route_add
-      @current_station_index = 0
-      @current_station = @route_add.route[0]
-      @next_station = @route_add.route[1]
-      @previous_station = @route_add.route[-1]
-      puts "Маршрут #{@route_add.route} опередлён поезду с номером '#{@number}'."
-      puts "--------------------------------------------------------- \n"
-      puts "Поезд с номером '#{@number}' помещен на первую станцию маршрута: '#{@current_station}'."
-    else
-      puts "Ошибка. Введенные данные не являются маршрутом."
-    end
+	def initialize_route_list
+		self.current_station
+		self.next_station
+		self.previous_station
+	end
+
+	def current_station
+		@current_station = @route_stations.first
+	end
+
+	def next_station
+		if @next_station == @first_station
+			@next_station = nil
+		else
+			@next_station = @route_stations.rotate.first
+		end
+	end
+
+	def previous_station
+		if @previous_station == @last_station
+			@previous_station = nil
+		else
+			@previous_station = @route_stations.rotate(-1).first
+		end
+	end
+
+  def route_list
+		@route_list = [@previous_station, @current_station, @next_station]
   end
 
   def move_forward
-    if @next_station != nil
-      @previous_station = @current_station
-      @current_station = @route_add.route[@current_station_index + 1]
-      @next_station = @route_add.route[@current_station_index + 2]
-      puts "Поезд с номером '#{@number}' прибыл на станцию '#{@current_station}'."
-      @current_station_index += 1
-    else
-      puts "Поезд с номером '#{@number}' находится на конечной станции '#{@current_station}'."
-    end
+		self.current_station
+		if @current_station == @last_station
+			abort
+		else
+			@route_stations = @route_stations.rotate
+			self.initialize_route_list
+		end
   end
 
   def move_back
-    if @previous_station != nil && @current_station_index > 0
-      @next_station = @current_station
-      @current_station =  @route_add.route[@current_station_index - 1]
-      @previous_station = @route_add.route[@current_station_index - 2]
-      puts "Поезд с номером '#{@number}' прибыл на станцию '#{@current_station}'"
-      @current_station_index -= 1
-    else
-      puts "Поезд с номером '#{@number}' находится на конечной станции '#{@current_station}'."
-    end
-  end
+		self.current_station
+		if @current_station == @first_station
+			abort
+		else
+			@route_stations = @route_stations.rotate(-1)
+			self.initialize_route_list
+		end
+	end
 end
