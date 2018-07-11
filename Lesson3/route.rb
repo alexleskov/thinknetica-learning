@@ -28,10 +28,10 @@ class Route
     end
   end
 
-  def stations_between_list
+  def stations_list
     print "Промежуточные станции: "
     stations.each do |station|
-      print "-[#{station.name}]-" if station != station_first && station != station_last
+      print "-[#{station.name}]-"
     end
   end
 end
