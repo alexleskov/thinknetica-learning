@@ -8,7 +8,7 @@ class Route
   end
 
   def station_add(station)
-    if station.class == Station && !stations.include?(station)
+    return if stations.include?(station) || station.class != Station
       @stations.insert(-2, station)
     end
   end
