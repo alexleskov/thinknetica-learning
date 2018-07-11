@@ -1,5 +1,5 @@
 class Station
-  attr_reader :trains, :name, :passenger_trains_count, :cargo_trains_count
+  attr_reader :trains, :name
 
   def initialize(name)
     @name = name
@@ -7,21 +7,22 @@ class Station
   end
 
   def train_get(train)
-    if train.class == Train && !trains.include?(train)
+    if !trains.include?(train)
       @trains << train
     end
   end
 
   def train_send(train)
-    if train.class == Train && trains.include?(train)
-      trains.delete(train)
+    if trains.include?(train)
+      @trains.delete(train)
     end
   end
 
-  def trains_count_by_type
-    trains_types = []
-    trains.each { |train| trains_types << train.type }
-    @passenger_trains = trains_types.count("passenger")
-    @cargo_trains_count = trains_types.count("cargo")
+  def trains_count_by_type(type)
+    if type == "passenger"
+      passenger_trains = trains.type.count("passenger")
+    elsif type == "cargo"
+      cargo_trains_count = trains.type.count("cargo")
+    end
   end
 end
