@@ -10,7 +10,6 @@ class Route
   def station_add(station)
     return if stations.include?(station) || station.class != Station
       @stations.insert(-2, station)
-    end
   end
 
   def first_station

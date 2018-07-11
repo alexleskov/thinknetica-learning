@@ -7,9 +7,8 @@ class Station
   end
 
   def train_get(train)
-    if !trains.include?(train)
+    return if trains.include?(train) || train.class != Train
       @trains << train
-    end
   end
 
   def train_send(train)
@@ -18,11 +17,17 @@ class Station
     end
   end
 
+  def trains_type
+    trains.type
+  end
+
   def trains_count_by_type(type)
-    if type == "passenger"
-      passenger_trains = trains.type.count("passenger")
-    elsif type == "cargo"
-      cargo_trains_count = trains.type.count("cargo")
+    trains_types = []
+      trains.each { |train| trains_types << train.type }
+    if type == :passenger
+      passenger_trains = trains_types.count(type)
+    elsif type == :cargo
+      cargo_trains_count = trains_types.count(type)
     end
   end
 end

@@ -41,13 +41,13 @@ class Train
   end
 
   def next_station
-    if current_station != route.last_station
+    if current_station != @route.last_station
       @route.stations[@index_station + 1]
     end
   end
 
   def previous_station
-    if current_station != route.first_station
+    if current_station != @route.first_station
       @route.stations[@index_station - 1]
     end
   end
@@ -65,5 +65,6 @@ class Train
      @index_station -= 1 
      next_station.train_send(self)
      current_station.train_get(self)
-  end
+   end
+ end
 end
