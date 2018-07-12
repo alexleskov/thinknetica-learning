@@ -32,7 +32,7 @@ class Train
     if route.class == Route
       @route = route
       @index_station = 0
-      route.first_station.train_get(self)
+      @route.first_station.train_get(self)
     end
   end
 
@@ -53,18 +53,18 @@ class Train
   end
 
   def move_forward
-    if next_station != nil 
+    if next_station
+      current_station.train_send(self)
+      next_station.train_get(self)
       @index_station += 1
-      previous_station.train_send(self)
-      current_station.train_get(self)
     end
   end
 
   def move_back
-   if previous_station != nil
+   if previous_station
+     current_station.train_send(self)
+     previous_station.train_get(self)
      @index_station -= 1 
-     next_station.train_send(self)
-     current_station.train_get(self)
    end
  end
 end
