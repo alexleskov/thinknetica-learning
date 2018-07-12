@@ -9,26 +9,25 @@ class Route
 
   def station_add(station)
     return if stations.include?(station) || station.class != Station
-      @stations.insert(-2, station)
+    @stations.insert(-2, station)
   end
 
   def first_station
-    stations.first
+    @stations.first
   end
 
   def last_station
-    stations.last
+    @stations.last
   end
 
   def station_remove(station)
-    if [first_station, last_station].index(station).nil?
-      @stations.delete(station)
-    end
+    return unless [first_station, last_station].include?(station)
+    @stations.delete(station)
   end
 
   def stations_list
     print "Список всех станций по порядку: "
-    stations.each do |station|
+    @stations.each do |station|
       print "-[#{station.name}]-"
     end
   end
