@@ -15,7 +15,7 @@ class Train
   def speed_down(value)
     if speed >= value
       @speed -= value
-    elsif speed < value
+    elsif
       @speed = 0
     end
   end
@@ -29,7 +29,7 @@ class Train
   end
 
   def route_add(route)
-    if route.class == Route
+    if route.instance_of?(Route)
       @route = route
       @index_station = 0
       @route.first_station.train_get(self)
@@ -41,15 +41,11 @@ class Train
   end
 
   def next_station
-    if current_station != @route.last_station
-      @route.stations[@index_station + 1]
-    end
+    @route.stations[@index_station + 1] if current_station != @route.last_station
   end
 
   def previous_station
-    if current_station != @route.first_station
-      @route.stations[@index_station - 1]
-    end
+    @route.stations[@index_station - 1] if current_station != @route.first_station
   end
 
   def move_forward
