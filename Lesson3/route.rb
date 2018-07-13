@@ -2,13 +2,13 @@ class Route
   attr_reader :stations
 
   def initialize(departure, arrival)
-    if departure.class == Station && arrival.class == Station
+    if departure.class == Station && arrival.instance_of?(Station)
       @stations = [departure, arrival]
     end
   end
 
   def station_add(station)
-    return if stations.include?(station) || station.class != Station
+    return if stations.include?(station) || !station.instance_of?(Station)
     @stations.insert(-2, station)
   end
 
