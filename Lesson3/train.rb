@@ -1,5 +1,5 @@
 class Train
-  attr_reader :type, :speed, :number
+  attr_reader :type, :speed, :number, :vagons
 
   def initialize(number, type)
     @number = number
@@ -21,16 +21,21 @@ class Train
   end
 
   def vagon_add(vagon)
-    return if @vagons.include?(vagon) && speed > 0 && !vagon.is_a?(Vagon)
-    @vagon = vagon
-    @vagons << vagon
-    @vagon.connect_to_train(self)
+    return if @vagons.include?(vagon)
+    if speed == 0
+      @vagon = vagon
+      @vagons << vagon
+      @vagon.connect_to_train(self)
+    end
   end
 
   def vagon_remove(vagon)
-    @vagons.delete(vagon) if speed == 0
-    @vagon = vagon
-    @vagon.unconnect_from_train(self)
+    return unless @vagons.include?(vagon)
+    if speed == 0
+      @vagon = vagon
+      @vagons.delete(vagon) 
+      @vagon.unconnect_from_train(self)
+    end
   end
 
   def route_add(route)
