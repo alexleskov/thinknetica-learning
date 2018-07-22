@@ -22,7 +22,7 @@ class Train
 
   def vagon_add(vagon)
     return if @vagons.include?(vagon)
-    if speed == 0
+    if vagon.is_a?(Vagon) && speed == 0
       @vagon = vagon
       @vagons << vagon
       @vagon.connect_to_train(self)
@@ -33,7 +33,7 @@ class Train
     return unless @vagons.include?(vagon)
     if speed == 0
       @vagon = vagon
-      @vagons.delete(vagon) 
+      @vagons.delete(vagon)
       @vagon.unconnect_from_train(self)
     end
   end
