@@ -12,14 +12,6 @@ class Route
     @stations.insert(-2, station)
   end
 
-  def first_station
-    @stations.first
-  end
-
-  def last_station
-    @stations.last
-  end
-
   def station_remove(station)
     return unless [first_station, last_station].include?(station)
     @stations.delete(station)
@@ -31,4 +23,13 @@ class Route
       print "-[#{station.name}]-"
     end
   end
+
+  def first_station
+    @stations.first
+  end
+
+  def last_station
+    @stations.last
+  end
+  
 end

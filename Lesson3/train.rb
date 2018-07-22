@@ -1,11 +1,11 @@
 class Train
-  attr_reader :type, :vagon_count, :speed, :number
+  attr_reader :type, :speed, :number
 
-  def initialize(number, type, vagon_count)
+  def initialize(number, type)
     @number = number
     @type = type
-    @vagon_count = vagon_count
     @speed = 0
+    @vagons = []
   end
 
   def speed_up(value)
@@ -20,12 +20,17 @@ class Train
     end
   end
 
-  def vagon_add
-    @vagon_count += 1 if speed == 0
+  def vagon_add(vagon)
+    return if @vagons.include?(vagon) && speed > 0 && !vagon.is_a?(Vagon)
+    @vagon = vagon
+    @vagons << vagon
+    @vagon.connect_to_train(self)
   end
 
-  def vagon_remove
-    @vagon_count -= 1 if vagon_count > 0 && speed == 0
+  def vagon_remove(vagon)
+    @vagons.delete(vagon) if speed == 0
+    @vagon = vagon
+    @vagon.unconnect_from_train(self)
   end
 
   def route_add(route)
@@ -40,14 +45,6 @@ class Train
     @route.stations[@index_station]
   end
 
-  def next_station
-    @route.stations[@index_station + 1] if current_station != @route.last_station
-  end
-
-  def previous_station
-    @route.stations[@index_station - 1] if current_station != @route.first_station
-  end
-
   def move_forward
     if next_station
       current_station.train_send(self)
@@ -57,10 +54,28 @@ class Train
   end
 
   def move_back
-   if previous_station
+    if previous_station
      current_station.train_send(self)
      previous_station.train_get(self)
      @index_station -= 1 
-   end
- end
+    end
+  end
+
+  protected
+
+  # Оба метода ниже предназначены только для корректной работы методов move_forward и move_back.
+  # Если использовать их в отдельности извне, то это приведет к серьезным ошибкам в программе:
+  # изменится значение станции следующий\предыдущей станции в маршруте у объекта поезда,
+  # но при этом поезд не переместится в соответствующий объект станции, - а оно нам надо?
+  # Потом еще с транспортной полицией разбираться, что этот поезд тут забыл и по судам затаскают.
+  # protected - потому что должно использоваться в подклассах.
+
+  def next_station
+    @route.stations[@index_station + 1] if current_station != @route.last_station
+  end
+
+  def previous_station
+    @route.stations[@index_station - 1] if current_station != @route.first_station
+  end
+
 end
