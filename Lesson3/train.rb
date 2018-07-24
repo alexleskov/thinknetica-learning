@@ -1,9 +1,8 @@
 class Train
   attr_reader :type, :speed, :number, :vagons
 
-  def initialize(number, type)
+  def initialize(number)
     @number = number
-    @type = type
     @speed = 0
     @vagons = []
   end
@@ -21,8 +20,8 @@ class Train
   end
 
   def vagon_add(vagon)
-    return unless !@vagons.include?(vagon) && vagon.current_train.nil? && vagon.is_a?(Vagon)
-    if speed == 0
+    return if @vagons.include?(vagon) && !vagon.current_train.nil? && !vagon.is_a?(Vagon)
+    if speed == 0 && self.type == vagon.type
       @vagons << vagon
       vagon.connect_to(self)
     end
@@ -67,6 +66,7 @@ class Train
   protected
 
   # Оба метода ниже предназначены только для корректной работы методов move_forward и move_back.
+  # Нарушится принцип инкапсуляции.
   # Если использовать их в отдельности извне, то это приведет к серьезным ошибкам в программе:
   # изменится значение станции следующий\предыдущей станции в маршруте у объекта поезда,
   # но при этом поезд не переместится в соответствующий объект станции, - а оно нам надо?

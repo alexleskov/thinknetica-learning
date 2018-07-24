@@ -1,14 +1,13 @@
 class Vagon
 	attr_reader :number, :type, :current_train
 
-	def initialize(number,type)
+	def initialize(number)
 		@number = number
-		@type = type
 	end
 
 	def connect_to(train)
     return unless current_train.nil? && train.is_a?(Train)
-    if train.speed == 0
+    if train.speed == 0 && self.type == train.type
 			set_current_train(train)
       train.vagon_add(self)
     end
