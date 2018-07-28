@@ -7,7 +7,7 @@ class Station
   end
 
   def train_get(train)
-    return if @trains.include?(train) || !train.is_a?(Train)
+    return if @trains.include?(train) || !train.is_a?(Train)  
     @trains << train
   end
 

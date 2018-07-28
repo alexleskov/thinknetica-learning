@@ -1,4 +1,4 @@
-class Vagon
+class Wagon
 	attr_reader :number, :type, :current_train
 
 	def initialize(number)
@@ -9,7 +9,7 @@ class Vagon
     return unless current_train.nil? && train.is_a?(Train)
     if train.speed == 0 && self.type == train.type
 			set_current_train(train)
-      train.vagon_add(self)
+      train.wagon_add(self)
     end
 	end
 
@@ -17,7 +17,7 @@ class Vagon
 		return if current_train.nil?
     if train.speed == 0
       set_current_train(nil)
-      train.vagon_remove(self)
+      train.wagon_remove(self)
     end
 	end
 
