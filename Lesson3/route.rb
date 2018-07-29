@@ -1,8 +1,9 @@
 class Route
-  attr_reader :stations
+  attr_reader :stations, :name
 
-  def initialize(departure, arrival)
-    if departure.class == Station && arrival.instance_of?(Station)
+  def initialize(name, departure, arrival)
+    if departure.instance_of?(Station) && arrival.instance_of?(Station)
+      @name = name
       @stations = [departure, arrival]
     end
   end

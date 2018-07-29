@@ -11,7 +11,7 @@ puts "Ваша личная виртуальная железная дорога
 
 
 class RailRoad
-  attr_reader :input, :stations, :routes, :trains
+  attr_reader :input, :stations, :routes, :trains, :wagons
 
   def initialize
     @stations = []
@@ -20,56 +20,62 @@ class RailRoad
     @wagons = []
   end
 
-  def menu
-    @input = 0
-    level_1
-  end
-
   def choice
     loop do
-      puts "\nУкажите цифру пункта нужного меню:"
+      puts "\nУкажите цифру пункта нужного меню ('стоп' - чтобы выйти):"
       puts "-----------------------------------\n"
-      @input = gets.to_i
-      break if input > 0
+      @input = gets.chomp
+      break if input.length > 0
     end
+    @input = input.to_i
+    puts "\nВы вышли из меню" if input == 0 
   end
 
-  def level_1
-    puts "\n                 МЕНЮ УПРАВЛЕНИЯ ВИРТУАЛЬНОЙ ЖЕЛЕЗНОЙ ДОРОГОЙ                "
-    puts "-------------------------------------------------------------------------------"
-    puts "| 1 - Создания объектов (Cтанция, Поезд, Маршрут, Вагон)                      |"
-    puts "| 2 - Назначение объектов (Назначение маршрута, Добавить или Отцепить вагон)  |"
-    puts "| 3 - Управление поездом (Установить скорость, Сменить станцию)               |"
-    puts "| 4 - Просмотр списков (Список станций, Список поездов на станции)           |"
-    puts "-------------------------------------------------------------------------------\n"
+  def menu
+    puts "\n                 МЕНЮ УПРАВЛЕНИЯ ВИРТУАЛЬНОЙ ЖЕЛЕЗНОЙ ДОРОГОЙ                      "
+    puts "-------------------------------------------------------------------------------------"
+    puts "| 1 - Создания объектов (Cтанция, Поезд, Маршрут, Вагон)                            |"
+    puts "| 2 - Управление маршрутом (Добавить станцию, Удалить станцию)                      |"
+    puts "| 3 - Управление поездом (Установить скорость, Сменить станцию)                     |"
+    puts "| 4 - Управление вагоном (Прицепить вагон, Отцепить вагон)                          |"
+    puts "| 5 - Просмотр списков (Список станций, Список поездов на станции)                  |"
+    puts "------------------------------------------------------------------------------------\n"
+    @input = 0
     choice
-    level_1_cases
+    menu_cases
   end 
 
-
-  def level_1_cases
+  def menu_cases
     case input
+      when 0
       when 1
         puts "\nВыберите, что хотите создать:"
         puts "1 - Станция\n2 - Поезд\n3 - Маршрут\n4 - Вагон"
         choice
-        level_1_1_cases
+        level_1_cases
       when 2
         puts "\nВыберите, что хотите сделать:"
-        puts "1 - Назначить маршрут\n2 - Добавить вагон\n3 - Отцепить вагон"
+        puts "\n1 - Добавить станцию\n2 - Удалить станцию"
+        choice
+        level_2_cases
       when 3
         puts "\nВыберите, что хотите сделать:"
-        puts "1 - Установить скорость\n2 - Сменить станцию"
+        puts "1 - Установить скорость\n2 - Переместиться на станцию\n3 - Назначить маршрут" 
+        choice
       when 4
+
+      when 5
         puts "\nВыберите, что хотите сделать:"
         puts "1 - Отркыть список станций\n2 - Открыть список поездов на станции"
+        choice
       else
-        puts "\nТакого пункта меню не существует"
+        puts "\nТакого пункта меня нет"
     end
   end
 
-  def level_1_1_cases
+  def level_1_cases
     case input
+      when 0
       when 1
         level_1_1
       when 2
@@ -78,12 +84,14 @@ class RailRoad
         level_1_3
       when 4
         level_1_4
+      else
+        puts "\nТакого пункта меня нет"
     end
   end
 
   def level_1_1
     loop do
-      puts "Введите название станции: "
+      puts "\nВведите название станции: "
       @station_name = gets.chomp
       break if @station_name.length > 0
     end
@@ -91,15 +99,15 @@ class RailRoad
     stations << Station.new(@station_name)
   end
 
-   def level_1_2
+  def level_1_2
     loop do
-      puts "Введите номер поезда: "
+      puts "\nВведите номер поезда: "
       @train_number = gets.to_i
       break if @train_number > 0
     end
     return if trains.count { |train| train.number == @train_number } > 0
     loop do
-      puts "Введите тип поезда (cargo или passenger): "
+      puts "\nВведите тип поезда (cargo или passenger): "
       @train_type = gets.chomp.to_sym
       break if @train_type == :cargo || @train_type == :passenger
     end
@@ -108,5 +116,81 @@ class RailRoad
     elsif @train_type == :passenger
       trains << PassengerTrain.new(@train_number)
     end
+  end
+
+  def level_1_3
+    loop do
+      puts "\nВведите название маршрута: "
+      @route_name = gets.chomp
+      break if @route_name.length > 0
+    end
+    loop do
+      puts "\nВведите название начальной станции: "
+      @station_departure_name = gets.chomp
+      break if @station_departure_name.length > 0
+    end
+    @station_departure_index = stations.index { |station| station.name == @station_departure_name }
+    return if @station_departure_index.nil?
+    @station_departure = stations[@station_departure_index]
+    loop do
+      puts "\nВведите название конечной станции: "
+      @station_arrival_name = gets.chomp
+      break if @station_arrival_name.length > 0
+    end
+    @station_arrival_index = stations.index { |station| station.name == @station_arrival_name }
+    return if @station_arrival_index.nil?
+    @station_arrival = stations[@station_arrival_index]
+    routes << Route.new(@route_name, @station_departure, @station_arrival)
+  end
+
+  def level_1_4
+    loop do
+      puts "\nВведите номер вагона: "
+      @wagon_number = gets.to_i
+      break if @wagon_number > 0
+    end
+    return if wagons.count { |wagon| wagon.number == @wagon_number } > 0
+    loop do
+      puts "\nВведите тип вагона (cargo или passenger): "
+      @wagon_type = gets.chomp.to_sym
+      break if @wagon_type == :cargo || @wagon_type == :passenger
+    end
+    if @wagon_type == :cargo
+      wagons << CargoWagon.new(@wagon_number)
+    elsif @wagon_type == :passenger
+      wagons << PassengerWagon.new(@wagon_number)
+    end
+  end
+
+  def level_2_cases
+    case input
+      when 0
+      when 1
+        level_2_1
+      when 2
+        level_2_2
+      else
+        puts "\nТакого пункта меня нет"
+    end
+  end
+
+  def level_2_1
+    loop do
+      puts "\nВведите название маршрута: "
+      @route_name = gets.chomp
+      break if @route_name.length > 0
+    end
+    return if routes.count { |route| route.name == @route_name } == 0
+    @route_index = routes.index { |route| route.name == @route_name }
+    @route = routes[@route_index]
+    loop do
+      puts "\nВведите название станции: "
+      @station_name = gets.chomp
+      break if @station_name.length > 0
+    end
+    return if stations.count { |station| station.name == @station_name } == 0
+    @station_index = stations.index { |station| station.name == @station_name }
+    @station = stations[@station_index]
+    @route.station_add(@station)
   end
 end
