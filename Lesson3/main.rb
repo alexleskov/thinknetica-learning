@@ -239,23 +239,23 @@ class RailRoad
       @train_number = gets.to_i
       break if @train_number > 0
     end
-    return if trains.count { |train| train.number == @train_number } > 0
+    return unless trains.count { |train| train.number == @train_number } > 0
+    @train_index = trains.index { |train| train.number == @train_number }
+    @train = trains[@train_index]
     loop do
       puts "\n1 - Ускорить поезд\n2 - Замедлить поезд: "
-      @speed_mode = gets.chomp
-    break if @speed_mode.length > 0
+      @speed_mode = gets.to_i
+    break if @speed_mode == 1 || @speed_mode == 2
     end
     loop do
       puts "\nВведите значение изменения скорости: "
-      @speed = gets.chomp
-    break if @speed.length > 0
+      @speed_value = gets.to_i
+    break if @speed_value != 0
     end
-    @train_index = trains.index { |train| train.number == @train_number }
-    @train = trains[@train_index]
     if @speed_mode == 1
-      @train.speed_up(@speed)
+      @train.speed_up(@speed_value)
     elsif @speed_mode == 2
-      @train.speed_down(@speed)
+      @train.speed_down(@speed_value)
     end
   end
 
