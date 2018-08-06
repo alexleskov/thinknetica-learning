@@ -14,7 +14,7 @@ class Route
   end
 
   def station_remove(station)
-    return unless [first_station, last_station].include?(station)
+    return if [first_station, last_station].include?(station)
     @stations.delete(station)
   end
 

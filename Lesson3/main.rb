@@ -36,7 +36,7 @@ class RailRoad
     puts "-------------------------------------------------------------------------------------"
     puts "| 1 - Создания объектов (Cтанция, Поезд, Маршрут, Вагон)                            |"
     puts "| 2 - Управление маршрутом (Добавить станцию, Удалить станцию)                      |"
-    puts "| 3 - Управление поездом (Установить скорость, Сменить станцию)                     |"
+    puts "| 3 - Управление поездом (Установить скорость, Сменить станцию, Назначить маршрут)  |"
     puts "| 4 - Управление вагоном (Прицепить вагон, Отцепить вагон)                          |"
     puts "| 5 - Просмотр списков (Список станций, Список поездов на станции)                  |"
     puts "------------------------------------------------------------------------------------\n"
@@ -54,20 +54,25 @@ class RailRoad
         choice
         level_1_cases
       when 2
-        puts "\nВыберите, что хотите сделать:"
+        puts "\nВыберите, что хотите сделать с маршрутом:"
         puts "\n1 - Добавить станцию\n2 - Удалить станцию"
         choice
         level_2_cases
       when 3
-        puts "\nВыберите, что хотите сделать:"
+        puts "\nВыберите, что хотите сделать с поездом:"
         puts "1 - Установить скорость\n2 - Переместиться на станцию\n3 - Назначить маршрут" 
         choice
+        level_3_cases
       when 4
-
+        puts "\nВыберите, что хотите сделать с вагоном:"
+        puts "1 - Прицепить вагон\n2 - Отцепить вагон" 
+        choice
+        level_4_cases
       when 5
         puts "\nВыберите, что хотите сделать:"
-        puts "1 - Отркыть список станций\n2 - Открыть список поездов на станции"
+        puts "1 - Посмотреть список станций\n2 - Посмотреть список поездов на станции"
         choice
+        level_5_cases
       else
         puts "\nТакого пункта меня нет"
     end
@@ -184,7 +189,7 @@ class RailRoad
     @route_index = routes.index { |route| route.name == @route_name }
     @route = routes[@route_index]
     loop do
-      puts "\nВведите название станции: "
+      puts "\nВведите название станции для добавления: "
       @station_name = gets.chomp
       break if @station_name.length > 0
     end
@@ -193,4 +198,65 @@ class RailRoad
     @station = stations[@station_index]
     @route.station_add(@station)
   end
+
+  def level_2_2
+    loop do
+      puts "\nВведите название маршрута: "
+      @route_name = gets.chomp
+      break if @route_name.length > 0
+    end
+    return if routes.count { |route| route.name == @route_name } == 0
+    @route_index = routes.index { |route| route.name == @route_name }
+    @route = routes[@route_index]
+    loop do
+      puts "\nВведите название станции для удаления: "
+      @station_name = gets.chomp
+      break if @station_name.length > 0
+    end
+    return if @route.stations.count { |station| station.name == @station_name } == 0
+    @station_index = stations.index { |station| station.name == @station_name }
+    @station = stations[@station_index]
+    @route.station_remove(@station)    
+  end
+
+  def level_3_cases
+    case input
+      when 0
+      when 1
+        level_3_1
+      when 2
+        level_3_2
+      when 2
+        level_3_3
+      else
+        puts "\nТакого пункта меня нет"
+    end
+  end
+
+  def level_3_1
+    loop do
+      puts "\nВведите номер поезда: "
+      @train_number = gets.to_i
+      break if @train_number > 0
+    end
+    return if trains.count { |train| train.number == @train_number } > 0
+    loop do
+      puts "\n1 - Ускорить поезд\n2 - Замедлить поезд: "
+      @speed_mode = gets.chomp
+    break if @speed_mode.length > 0
+    end
+    loop do
+      puts "\nВведите значение изменения скорости: "
+      @speed = gets.chomp
+    break if @speed.length > 0
+    end
+    @train_index = trains.index { |train| train.number == @train_number }
+    @train = trains[@train_index]
+    if @speed_mode == 1
+      @train.speed_up(@speed)
+    elsif @speed_mode == 2
+      @train.speed_down(@speed)
+    end
+  end
+
 end
