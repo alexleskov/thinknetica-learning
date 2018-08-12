@@ -31,6 +31,9 @@ class RailRoad
     puts "\nВы вышли из меню" if input == 0 
   end
 
+  def is_
+  end
+
   def menu
     puts "\n                 МЕНЮ УПРАВЛЕНИЯ ВИРТУАЛЬНОЙ ЖЕЛЕЗНОЙ ДОРОГОЙ                      "
     puts "-------------------------------------------------------------------------------------"
@@ -185,7 +188,7 @@ class RailRoad
       @route_name = gets.chomp
       break if @route_name.length > 0
     end
-    return if routes.count { |route| route.name == @route_name } == 0
+    return unless routes.count { |route| route.name == @route_name } > 0
     @route_index = routes.index { |route| route.name == @route_name }
     @route = routes[@route_index]
     loop do
@@ -193,7 +196,7 @@ class RailRoad
       @station_name = gets.chomp
       break if @station_name.length > 0
     end
-    return if stations.count { |station| station.name == @station_name } == 0
+    return unless stations.count { |station| station.name == @station_name } > 0
     @station_index = stations.index { |station| station.name == @station_name }
     @station = stations[@station_index]
     @route.station_add(@station)
@@ -205,7 +208,7 @@ class RailRoad
       @route_name = gets.chomp
       break if @route_name.length > 0
     end
-    return if routes.count { |route| route.name == @route_name } == 0
+    return unless routes.count { |route| route.name == @route_name } > 0
     @route_index = routes.index { |route| route.name == @route_name }
     @route = routes[@route_index]
     loop do
@@ -213,7 +216,7 @@ class RailRoad
       @station_name = gets.chomp
       break if @station_name.length > 0
     end
-    return if @route.stations.count { |station| station.name == @station_name } == 0
+    return unless @route.stations.count { |station| station.name == @station_name } > 0
     @station_index = stations.index { |station| station.name == @station_name }
     @station = stations[@station_index]
     @route.station_remove(@station)    
@@ -226,7 +229,7 @@ class RailRoad
         level_3_1
       when 2
         level_3_2
-      when 2
+      when 3
         level_3_3
       else
         puts "\nТакого пункта меня нет"
@@ -243,7 +246,7 @@ class RailRoad
     @train_index = trains.index { |train| train.number == @train_number }
     @train = trains[@train_index]
     loop do
-      puts "\n1 - Ускорить поезд\n2 - Замедлить поезд: "
+      puts "\n1 - Ускорить поезд\n2 - Замедлить поезд"
       @speed_mode = gets.to_i
     break if @speed_mode == 1 || @speed_mode == 2
     end
@@ -256,6 +259,134 @@ class RailRoad
       @train.speed_up(@speed_value)
     elsif @speed_mode == 2
       @train.speed_down(@speed_value)
+    end
+  end
+
+  def level_3_2
+    loop do
+      puts "\nВведите номер поезда: "
+      @train_number = gets.to_i
+      break if @train_number > 0
+    end
+    return unless trains.count { |train| train.number == @train_number } > 0
+    @train_index = trains.index { |train| train.number == @train_number }
+    @train = trains[@train_index]
+    loop do
+      puts "\n1 - Вперед на следующую станцию\n2 - Назад на предыдущую станцию: "
+      @move_mode = gets.to_i
+    break if @move_mode == 1 || @move_mode == 2
+    end
+    if @move_mode == 1
+      @train.move_forward
+    elsif @move_mode == 2
+      @train.move_back
+    end      
+  end
+
+  def level_3_3
+    loop do
+      puts "\nВведите номер поезда: "
+      @train_number = gets.to_i
+      break if @train_number > 0
+    end
+    return unless trains.count { |train| train.number == @train_number } > 0
+    @train_index = trains.index { |train| train.number == @train_number }
+    @train = trains[@train_index]  
+    loop do
+      puts "\nВведите название маршрута: "
+      @route_name = gets.chomp
+      break if @route_name.length > 0
+    end
+    return unless routes.count { |route| route.name == @route_name } > 0
+    @route_index = routes.index { |route| route.name == @route_name }
+    @route = routes[@route_index]
+    @train.route_add(@route)    
+  end
+
+  def level_4_cases
+    case input
+      when 0
+      when 1
+        level_4_1
+      when 2
+        level_4_2
+      else
+        puts "\nТакого пункта меня нет"
+    end    
+  end
+
+  def level_4_1
+    loop do
+      puts "\nВведите номер вагона: "
+      @wagon_number = gets.to_i
+      break if @wagon_number > 0
+    end
+    return unless wagons.count { |wagon| wagon.number == @wagon_number } > 0
+    @wagon_index = wagons.index { |wagon| wagon.number == @wagon_number}
+    @wagon = wagons[@wagon_index]    
+    loop do
+      puts "\nВведите номер поезда: "
+      @train_number = gets.to_i
+      break if @train_number > 0
+    end
+    return unless trains.count { |train| train.number == @train_number } > 0
+    @train_index = trains.index { |train| train.number == @train_number }
+    @train = trains[@train_index]
+    @wagon.connect_to(@train)
+  end
+
+  def level_4_2
+    loop do
+      puts "\nВведите номер вагона: "
+      @wagon_number = gets.to_i
+      break if @wagon_number > 0
+    end
+    return unless wagons.count { |wagon| wagon.number == @wagon_number } > 0
+    @wagon_index = wagons.index { |wagon| wagon.number == @wagon_number}
+    @wagon = wagons[@wagon_index]    
+    loop do
+      puts "\nВведите номер поезда: "
+      @train_number = gets.to_i
+      break if @train_number > 0
+    end
+    return unless trains.count { |train| train.number == @train_number } > 0
+    @train_index = trains.index { |train| train.number == @train_number }
+    @train = trains[@train_index]
+    @wagon.unconnect_from(@train)
+  end
+
+  def level_5_cases
+    case input
+      when 0
+      when 1
+        level_5_1
+      when 2
+        level_5_2
+      else
+        puts "\nТакого пункта меня нет"
+    end    
+  end
+
+  def level_5_1
+    @stations.each do |station|
+      puts "[#{station.name}]"
+    end
+  end
+
+  def level_5_2
+    loop do
+      puts "\nВведите название станции: "
+      @station_name = gets.chomp
+      break if @station_name.length > 0
+    end
+    return unless stations.count { |station| station.name == @station_name } > 0
+    @station_index = stations.index { |station| station.name == @station_name }
+    @station = stations[@station_index]
+    return if @station.trains.empty?
+    puts "\nСписок поездов на станции #{@station.name}:\n"
+    @station.trains.each do |train|
+      puts " Номер поезда: #{train.number}\n Тип поезда: #{train.type}"
+      puts "\n----------------------------------------------------------\n"
     end
   end
 
