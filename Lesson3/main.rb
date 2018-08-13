@@ -20,20 +20,6 @@ class RailRoad
     @wagons = []
   end
 
-  def choice
-    loop do
-      puts "\nУкажите цифру пункта нужного меню ('стоп' - чтобы выйти):"
-      puts "-----------------------------------\n"
-      @input = gets.chomp
-      break if input.length > 0
-    end
-    @input = input.to_i
-    puts "\nВы вышли из меню" if input == 0 
-  end
-
-  def is_
-  end
-
   def menu
     puts "\n                 МЕНЮ УПРАВЛЕНИЯ ВИРТУАЛЬНОЙ ЖЕЛЕЗНОЙ ДОРОГОЙ                      "
     puts "-------------------------------------------------------------------------------------"
@@ -47,6 +33,74 @@ class RailRoad
     choice
     menu_cases
   end 
+
+  #Нарушится принцип инкапсуляции.
+  #При этом, нет необходимости, чтобы методы были доступны извне, в том числе и в подклассах этого класса.
+
+  private
+
+  def choice
+    loop do
+      puts "\nУкажите цифру пункта нужного меню ('стоп' - чтобы выйти):"
+      puts "-----------------------------------\n"
+      @input = gets.chomp
+      break if input.length > 0
+    end
+    @input = input.to_i
+    puts "\nВы вышли из меню" if input == 0 
+  end
+
+  def object_by_name(initial_object,array)
+    index = array.index { |object_in_array| object_in_array.name == initial_object }
+    return if index.nil?
+    array[index] 
+  end
+
+  def object_by_number(initial_object,array)
+    index = array.index { |object_in_array| object_in_array.number == initial_object }
+    return if index.nil?
+    array[index] 
+  end
+
+  def request_train
+    loop do
+      puts "\nВведите номер поезда: "
+      @train_number = gets.to_i
+      break if @train_number > 0
+    end
+    @train = object_by_number(@train_number,trains)
+    return if @train.nil?
+  end
+
+  def request_route
+    loop do
+      puts "\nВведите название маршрута: "
+      @route_name = gets.chomp
+      break if @route_name.length > 0
+    end
+    @route = object_by_name(@route_name,routes)
+    return if @route.nil?    
+  end
+
+  def request_station
+    loop do
+      puts "\nВведите название станции: "
+      @station_name = gets.chomp
+      break if @station_name.length > 0
+    end
+    @station = object_by_name(@station_name,stations)
+    return if @station.nil?
+  end
+
+  def request_wagon
+    loop do
+      puts "\nВведите номер вагона: "
+      @wagon_number = gets.to_i
+      break if @wagon_number > 0
+    end
+    @wagon = object_by_number(@wagon_number,wagons)
+    return if @wagon.nil?     
+  end
 
   def menu_cases
     case input
@@ -103,7 +157,7 @@ class RailRoad
       @station_name = gets.chomp
       break if @station_name.length > 0
     end
-    return if stations.count { |station| station.name == @station_name } > 0
+    return unless object_by_name(@station_name,stations).nil?
     stations << Station.new(@station_name)
   end
 
@@ -113,7 +167,7 @@ class RailRoad
       @train_number = gets.to_i
       break if @train_number > 0
     end
-    return if trains.count { |train| train.number == @train_number } > 0
+    return unless object_by_number(@train_number,trains).nil?
     loop do
       puts "\nВведите тип поезда (cargo или passenger): "
       @train_type = gets.chomp.to_sym
@@ -137,17 +191,15 @@ class RailRoad
       @station_departure_name = gets.chomp
       break if @station_departure_name.length > 0
     end
-    @station_departure_index = stations.index { |station| station.name == @station_departure_name }
-    return if @station_departure_index.nil?
-    @station_departure = stations[@station_departure_index]
+    @station_departure = object_by_name(@station_departure_name,stations)
+    return if @station_departure.nil?
     loop do
       puts "\nВведите название конечной станции: "
       @station_arrival_name = gets.chomp
       break if @station_arrival_name.length > 0
     end
-    @station_arrival_index = stations.index { |station| station.name == @station_arrival_name }
-    return if @station_arrival_index.nil?
-    @station_arrival = stations[@station_arrival_index]
+    @station_arrival = object_by_name(@station_arrival_name,stations)
+    return if @station_arrival.nil?
     routes << Route.new(@route_name, @station_departure, @station_arrival)
   end
 
@@ -157,7 +209,7 @@ class RailRoad
       @wagon_number = gets.to_i
       break if @wagon_number > 0
     end
-    return if wagons.count { |wagon| wagon.number == @wagon_number } > 0
+    return unless object_by_number(@wagon_number,wagons).nil?
     loop do
       puts "\nВведите тип вагона (cargo или passenger): "
       @wagon_type = gets.chomp.to_sym
@@ -183,42 +235,14 @@ class RailRoad
   end
 
   def level_2_1
-    loop do
-      puts "\nВведите название маршрута: "
-      @route_name = gets.chomp
-      break if @route_name.length > 0
-    end
-    return unless routes.count { |route| route.name == @route_name } > 0
-    @route_index = routes.index { |route| route.name == @route_name }
-    @route = routes[@route_index]
-    loop do
-      puts "\nВведите название станции для добавления: "
-      @station_name = gets.chomp
-      break if @station_name.length > 0
-    end
-    return unless stations.count { |station| station.name == @station_name } > 0
-    @station_index = stations.index { |station| station.name == @station_name }
-    @station = stations[@station_index]
+    request_route
+    request_station
     @route.station_add(@station)
   end
 
   def level_2_2
-    loop do
-      puts "\nВведите название маршрута: "
-      @route_name = gets.chomp
-      break if @route_name.length > 0
-    end
-    return unless routes.count { |route| route.name == @route_name } > 0
-    @route_index = routes.index { |route| route.name == @route_name }
-    @route = routes[@route_index]
-    loop do
-      puts "\nВведите название станции для удаления: "
-      @station_name = gets.chomp
-      break if @station_name.length > 0
-    end
-    return unless @route.stations.count { |station| station.name == @station_name } > 0
-    @station_index = stations.index { |station| station.name == @station_name }
-    @station = stations[@station_index]
+    request_route
+    request_station
     @route.station_remove(@station)    
   end
 
@@ -237,14 +261,7 @@ class RailRoad
   end
 
   def level_3_1
-    loop do
-      puts "\nВведите номер поезда: "
-      @train_number = gets.to_i
-      break if @train_number > 0
-    end
-    return unless trains.count { |train| train.number == @train_number } > 0
-    @train_index = trains.index { |train| train.number == @train_number }
-    @train = trains[@train_index]
+    request_train
     loop do
       puts "\n1 - Ускорить поезд\n2 - Замедлить поезд"
       @speed_mode = gets.to_i
@@ -263,16 +280,9 @@ class RailRoad
   end
 
   def level_3_2
+    request_train
     loop do
-      puts "\nВведите номер поезда: "
-      @train_number = gets.to_i
-      break if @train_number > 0
-    end
-    return unless trains.count { |train| train.number == @train_number } > 0
-    @train_index = trains.index { |train| train.number == @train_number }
-    @train = trains[@train_index]
-    loop do
-      puts "\n1 - Вперед на следующую станцию\n2 - Назад на предыдущую станцию: "
+      puts "\n1 - Вперед на следующую станцию\n2 - Назад на предыдущую станцию"
       @move_mode = gets.to_i
     break if @move_mode == 1 || @move_mode == 2
     end
@@ -284,22 +294,8 @@ class RailRoad
   end
 
   def level_3_3
-    loop do
-      puts "\nВведите номер поезда: "
-      @train_number = gets.to_i
-      break if @train_number > 0
-    end
-    return unless trains.count { |train| train.number == @train_number } > 0
-    @train_index = trains.index { |train| train.number == @train_number }
-    @train = trains[@train_index]  
-    loop do
-      puts "\nВведите название маршрута: "
-      @route_name = gets.chomp
-      break if @route_name.length > 0
-    end
-    return unless routes.count { |route| route.name == @route_name } > 0
-    @route_index = routes.index { |route| route.name == @route_name }
-    @route = routes[@route_index]
+    request_train
+    request_route
     @train.route_add(@route)    
   end
 
@@ -316,42 +312,14 @@ class RailRoad
   end
 
   def level_4_1
-    loop do
-      puts "\nВведите номер вагона: "
-      @wagon_number = gets.to_i
-      break if @wagon_number > 0
-    end
-    return unless wagons.count { |wagon| wagon.number == @wagon_number } > 0
-    @wagon_index = wagons.index { |wagon| wagon.number == @wagon_number}
-    @wagon = wagons[@wagon_index]    
-    loop do
-      puts "\nВведите номер поезда: "
-      @train_number = gets.to_i
-      break if @train_number > 0
-    end
-    return unless trains.count { |train| train.number == @train_number } > 0
-    @train_index = trains.index { |train| train.number == @train_number }
-    @train = trains[@train_index]
+    request_wagon
+    request_train
     @wagon.connect_to(@train)
   end
 
   def level_4_2
-    loop do
-      puts "\nВведите номер вагона: "
-      @wagon_number = gets.to_i
-      break if @wagon_number > 0
-    end
-    return unless wagons.count { |wagon| wagon.number == @wagon_number } > 0
-    @wagon_index = wagons.index { |wagon| wagon.number == @wagon_number}
-    @wagon = wagons[@wagon_index]    
-    loop do
-      puts "\nВведите номер поезда: "
-      @train_number = gets.to_i
-      break if @train_number > 0
-    end
-    return unless trains.count { |train| train.number == @train_number } > 0
-    @train_index = trains.index { |train| train.number == @train_number }
-    @train = trains[@train_index]
+    request_wagon
+    request_train
     @wagon.unconnect_from(@train)
   end
 
@@ -374,19 +342,12 @@ class RailRoad
   end
 
   def level_5_2
-    loop do
-      puts "\nВведите название станции: "
-      @station_name = gets.chomp
-      break if @station_name.length > 0
-    end
-    return unless stations.count { |station| station.name == @station_name } > 0
-    @station_index = stations.index { |station| station.name == @station_name }
-    @station = stations[@station_index]
+    request_station
     return if @station.trains.empty?
     puts "\nСписок поездов на станции #{@station.name}:\n"
     @station.trains.each do |train|
       puts " Номер поезда: #{train.number}\n Тип поезда: #{train.type}"
-      puts "\n----------------------------------------------------------\n"
+      puts "----------------------------------------------------------\n"
     end
   end
 
