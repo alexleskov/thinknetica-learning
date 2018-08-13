@@ -5,4 +5,4 @@ class CargoWagon < Wagon
     super
   end 
   
-end
+end 

@@ -81,4 +81,4 @@ class Train
     @route.stations[@index_station - 1] if current_station != @route.first_station
   end
 
-end
+end 
