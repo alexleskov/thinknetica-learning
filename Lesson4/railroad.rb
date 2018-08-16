@@ -1,5 +1,5 @@
 class RailRoad
-  attr_reader :input, :stations, :routes, :trains, :wagons
+  attr_reader :stations, :routes, :trains, :wagons
 
   def initialize
     @stations = []
@@ -9,17 +9,21 @@ class RailRoad
   end
 
   def menu
-    puts "\n                 МЕНЮ УПРАВЛЕНИЯ ВИРТУАЛЬНОЙ ЖЕЛЕЗНОЙ ДОРОГОЙ                      "
-    puts "-------------------------------------------------------------------------------------"
-    puts "| 1 - Создания объектов (Cтанция, Поезд, Маршрут, Вагон)                            |"
-    puts "| 2 - Управление маршрутом (Добавить станцию, Удалить станцию)                      |"
-    puts "| 3 - Управление поездом (Установить скорость, Сменить станцию, Назначить маршрут)  |"
-    puts "| 4 - Управление вагоном (Прицепить вагон, Отцепить вагон)                          |"
-    puts "| 5 - Просмотр списков (Список станций, Список поездов на станции)                  |"
-    puts "------------------------------------------------------------------------------------\n"
-    @input = 0
-    choice
-    menu_cases
+    loop do
+      puts "\n                 МЕНЮ УПРАВЛЕНИЯ ВИРТУАЛЬНОЙ ЖЕЛЕЗНОЙ ДОРОГОЙ                      "
+      puts "-------------------------------------------------------------------------------------"
+      puts "| 1 - Создания объектов (Cтанция, Поезд, Маршрут, Вагон)                            |"
+      puts "| 2 - Управление маршрутом (Добавить станцию, Удалить станцию)                      |"
+      puts "| 3 - Управление поездом (Установить скорость, Сменить станцию, Назначить маршрут)  |"
+      puts "| 4 - Управление вагоном (Прицепить вагон, Отцепить вагон)                          |"
+      puts "| 5 - Просмотр списков (Список станций, Список поездов на станции)                  |"
+      puts "-------------------------------------------------------------------------------------\n"
+      puts "| 0 - Закрыть программу                                                             |\n"
+      puts "-------------------------------------------------------------------------------------\n"
+      input = choice
+      abort if input == 0
+      menu_cases(input)
+    end
   end 
 
   #Нарушится принцип инкапсуляции.
@@ -28,14 +32,13 @@ class RailRoad
   private
 
   def choice
-    loop do
-      puts "\nУкажите цифру пункта нужного меню ('стоп' - чтобы выйти):"
+    input = loop do
+      puts "\nУкажите цифру пункта нужного меню ('0' - назад/выход):"
       puts "-----------------------------------\n"
-      @input = gets.chomp
-      break if input.length > 0
+      i = gets.chomp
+      break(i.to_i) if i.length > 0
     end
-    @input = input.to_i
-    puts "\nВы вышли из меню" if input == 0 
+      input
   end
 
   def object_by_name(initial_object,array)
@@ -90,42 +93,35 @@ class RailRoad
     return if @wagon.nil?     
   end
 
-  def menu_cases
+  def menu_cases(input) 
     case input
-      when 0
       when 1
         puts "\nВыберите, что хотите создать:"
         puts "1 - Станция\n2 - Поезд\n3 - Маршрут\n4 - Вагон"
-        choice
-        creation_menu
+        creation_menu(choice)
       when 2
         puts "\nВыберите, что хотите сделать с маршрутом:"
         puts "\n1 - Добавить станцию\n2 - Удалить станцию"
-        choice
-        route_actions_menu
+        route_actions_menu(choice)
       when 3
         puts "\nВыберите, что хотите сделать с поездом:"
         puts "1 - Установить скорость\n2 - Переместиться на станцию\n3 - Назначить маршрут" 
-        choice
-        train_actions_menu
+        train_actions_menu(choice)
       when 4
         puts "\nВыберите, что хотите сделать с вагоном:"
         puts "1 - Прицепить вагон\n2 - Отцепить вагон" 
-        choice
-        wagon_actions_menu
+        wagon_actions_menu(choice)
       when 5
         puts "\nВыберите, что хотите сделать:"
         puts "1 - Посмотреть список станций\n2 - Посмотреть список поездов на станции"
-        choice
-        lists_menu
+        lists_menu(choice)
       else
-        puts "\nТакого пункта меня нет"
+        puts "\nТакого пункта меню нет"
     end
   end
 
-  def creation_menu
+  def creation_menu(input)
     case input
-      when 0
       when 1
         create_station
       when 2
@@ -135,7 +131,7 @@ class RailRoad
       when 4
         create_wagon
       else
-        puts "\nТакого пункта меня нет"
+        puts "\nТакого пункта меню нет"
     end
   end
 
@@ -210,15 +206,14 @@ class RailRoad
     end
   end
 
-  def route_actions_menu
+  def route_actions_menu(input)
     case input
-      when 0
       when 1
         route_add_station
       when 2
         route_remove_station
       else
-        puts "\nТакого пункта меня нет"
+        puts "\nТакого пункта меню нет"
     end
   end
 
@@ -234,9 +229,8 @@ class RailRoad
     @route.station_remove(@station)    
   end
 
-  def train_actions_menu
+  def train_actions_menu(input)
     case input
-      when 0
       when 1
         train_change_speed
       when 2
@@ -244,7 +238,7 @@ class RailRoad
       when 3
         train_add_route
       else
-        puts "\nТакого пункта меня нет"
+        puts "\nТакого пункта меню нет"
     end
   end
 
@@ -287,15 +281,14 @@ class RailRoad
     @train.route_add(@route)    
   end
 
-  def wagon_actions_menu
+  def wagon_actions_menu(input)
     case input
-      when 0
       when 1
         wagon_connect_to
       when 2
         wagon_unconnect_from
       else
-        puts "\nТакого пункта меня нет"
+        puts "\nТакого пункта меню нет"
     end    
   end
 
@@ -311,22 +304,21 @@ class RailRoad
     @wagon.unconnect_from(@train)
   end
 
-  def lists_menu
+  def lists_menu(input)
     case input
-      when 0
       when 1
         stations_list
       when 2
         trains_on_station_list
       else
-        puts "\nТакого пункта меня нет"
+        puts "\nТакого пункта меню нет"
     end    
   end
 
   def stations_list
-    @stations.each do |station|
-      puts "[#{station.name}]"
-    end
+    return puts "\nЕщё ни одной станции" if @stations.empty?
+    puts "\nСписок станций:"
+    @stations.each { |station| puts "\n[#{station.name}]" }
   end
 
   def trains_on_station_list
