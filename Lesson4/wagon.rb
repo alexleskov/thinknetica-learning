@@ -1,25 +1,25 @@
 class Wagon
-	attr_reader :number, :type, :current_train
+  attr_reader :number, :type, :current_train
 
-	def initialize(number)
-		@number = number
-	end
+  def initialize(number)
+    @number = number
+  end
 
-	def connect_to(train)
+  def connect_to(train)
     return unless current_train.nil? && train.is_a?(Train)
     if train.speed == 0 && self.type == train.type
-			set_current_train(train)
+      set_current_train(train)
       train.wagon_add(self)
     end
-	end
+  end
 
-	def unconnect_from(train)
-		return if current_train.nil?
+  def unconnect_from(train)
+    return if current_train.nil?
     if train.speed == 0
       set_current_train(nil)
       train.wagon_remove(self)
     end
-	end
+  end
 
   protected
 
