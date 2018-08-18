@@ -5,4 +5,4 @@ class PassengerWagon < Wagon
     super
   end
      
-end 
+end

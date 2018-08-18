@@ -32,4 +32,4 @@ class Wagon
     @current_train = train
   end
 
-end 
+end

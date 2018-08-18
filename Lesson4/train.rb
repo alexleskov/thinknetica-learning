@@ -14,7 +14,7 @@ class Train
   def speed_down(value)
     if speed >= value
       @speed -= value
-    elsif
+    else
       @speed = 0
     end
   end
@@ -81,4 +81,4 @@ class Train
     @route.stations[@index_station - 1] if current_station != @route.first_station
   end
 
-end 
+end
