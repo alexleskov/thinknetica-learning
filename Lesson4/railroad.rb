@@ -6,20 +6,12 @@ class RailRoad
     @trains = []
     @routes = []
     @wagons = []
+    @interface = Interface.new
   end
 
   def menu
     loop do
-      puts "\n                 МЕНЮ УПРАВЛЕНИЯ ВИРТУАЛЬНОЙ ЖЕЛЕЗНОЙ ДОРОГОЙ                      "
-      puts "-------------------------------------------------------------------------------------"
-      puts "| 1 - Создания объектов (Cтанция, Поезд, Маршрут, Вагон)                            |"
-      puts "| 2 - Управление маршрутом (Добавить станцию, Удалить станцию)                      |"
-      puts "| 3 - Управление поездом (Установить скорость, Сменить станцию, Назначить маршрут)  |"
-      puts "| 4 - Управление вагоном (Прицепить вагон, Отцепить вагон)                          |"
-      puts "| 5 - Просмотр списков (Список станций, Список поездов на станции)                  |"
-      puts "-------------------------------------------------------------------------------------\n"
-      puts "| 0 - Закрыть программу                                                             |\n"
-      puts "-------------------------------------------------------------------------------------\n"
+      @interface.main_menu
       input = choice
       abort if input == 0
       menu_cases(input)
@@ -33,187 +25,138 @@ class RailRoad
 
   def choice
     input = loop do
-      puts "\nУкажите цифру пункта нужного меню ('0' - назад/выход):"
-      puts "-----------------------------------\n"
-      i = gets.chomp
+      i = @interface.ask_choice
       break(i.to_i) if i.length > 0
     end
       input
   end
 
-  def object_by_name(initial_object,array)
+  def object_by_name(initial_object, array)
     index = array.index { |object_in_array| object_in_array.name == initial_object }
     return if index.nil?
     array[index] 
   end
 
-  def object_by_number(initial_object,array)
+  def object_by_number(initial_object, array)
     index = array.index { |object_in_array| object_in_array.number == initial_object }
     return if index.nil?
     array[index] 
   end
 
   def request_train
-    loop do
-      puts "\nВведите номер поезда: "
-      @train_number = gets.to_i
-      break if @train_number > 0
-    end
-    @train = object_by_number(@train_number,trains)
+    @train_number = @interface.ask_train_number
+    @train = object_by_number(@train_number, trains)
     return if @train.nil?
   end
 
   def request_route
-    loop do
-      puts "\nВведите название маршрута: "
-      @route_name = gets.chomp
-      break if @route_name.length > 0
-    end
-    @route = object_by_name(@route_name,routes)
+    @route_name = @interface.ask_route_name
+    @route = object_by_name(@route_name, routes)
     return if @route.nil?    
   end
 
   def request_station
-    loop do
-      puts "\nВведите название станции: "
-      @station_name = gets.chomp
-      break if @station_name.length > 0
-    end
-    @station = object_by_name(@station_name,stations)
+    @station_name = @interface.ask_station_name
+    @station = object_by_name(@station_name, stations)
     return if @station.nil?
   end
 
   def request_wagon
-    loop do
-      puts "\nВведите номер вагона: "
-      @wagon_number = gets.to_i
-      break if @wagon_number > 0
-    end
-    @wagon = object_by_number(@wagon_number,wagons)
+    @wagon_number = @interface.ask_wagon_number
+    @wagon = object_by_number(@wagon_number, wagons)
     return if @wagon.nil?     
   end
 
   def menu_cases(input) 
     case input
-      when 1
-        puts "\nВыберите, что хотите создать:"
-        puts "1 - Станция\n2 - Поезд\n3 - Маршрут\n4 - Вагон"
-        creation_menu(choice)
-      when 2
-        puts "\nВыберите, что хотите сделать с маршрутом:"
-        puts "\n1 - Добавить станцию\n2 - Удалить станцию"
-        route_actions_menu(choice)
-      when 3
-        puts "\nВыберите, что хотите сделать с поездом:"
-        puts "1 - Установить скорость\n2 - Переместиться на станцию\n3 - Назначить маршрут" 
-        train_actions_menu(choice)
-      when 4
-        puts "\nВыберите, что хотите сделать с вагоном:"
-        puts "1 - Прицепить вагон\n2 - Отцепить вагон" 
-        wagon_actions_menu(choice)
-      when 5
-        puts "\nВыберите, что хотите сделать:"
-        puts "1 - Посмотреть список станций\n2 - Посмотреть список поездов на станции"
-        lists_menu(choice)
-      else
-        puts "\nТакого пункта меню нет"
+    when 1
+      @interface.creation_menu
+      creation_menu(choice)
+    when 2
+      @interface.route_actions_menu
+      route_actions_menu(choice)
+    when 3
+      @interface.train_actions_menu
+      train_actions_menu(choice)
+    when 4
+      @interface.wagon_actions_menu
+      wagon_actions_menu(choice)
+    when 5
+      @interface.lists_menu
+      lists_menu(choice)
+    else
+      @interface.incorrect_choice
     end
   end
 
   def creation_menu(input)
     case input
-      when 1
-        create_station
-      when 2
-        create_train
-      when 3
-        create_route
-      when 4
-        create_wagon
-      else
-        puts "\nТакого пункта меню нет"
+    when 1
+      create_station
+    when 2
+      create_train
+    when 3
+      create_route
+    when 4
+      create_wagon
+    else
+      @interface.incorrect_choice
     end
   end
 
   def create_station
-    loop do
-      puts "\nВведите название станции: "
-      @station_name = gets.chomp
-      break if @station_name.length > 0
-    end
-    return unless object_by_name(@station_name,stations).nil?
+    @station_name = @interface.ask_station_name
+    return unless object_by_name(@station_name, stations).nil?
     stations << Station.new(@station_name)
+    @interface.successful_creating
   end
 
   def create_train
-    loop do
-      puts "\nВведите номер поезда: "
-      @train_number = gets.to_i
-      break if @train_number > 0
-    end
-    return unless object_by_number(@train_number,trains).nil?
-    loop do
-      puts "\nВведите тип поезда (cargo или passenger): "
-      @train_type = gets.chomp.to_sym
-      break if @train_type == :cargo || @train_type == :passenger
-    end
+    @train_number = @interface.ask_train_number
+    return unless object_by_number(@train_number, trains).nil?
+    @train_type = @interface.ask_train_type
     if @train_type == :cargo
       trains << CargoTrain.new(@train_number)
+      @interface.successful_creating
     elsif @train_type == :passenger
       trains << PassengerTrain.new(@train_number)
+      @interface.successful_creating
     end
   end
 
   def create_route
-    loop do
-      puts "\nВведите название маршрута: "
-      @route_name = gets.chomp
-      break if @route_name.length > 0
-    end
-    loop do
-      puts "\nВведите название начальной станции: "
-      @station_departure_name = gets.chomp
-      break if @station_departure_name.length > 0
-    end
-    @station_departure = object_by_name(@station_departure_name,stations)
+    @route_name = @interface.ask_route_name
+    @station_departure_name = @interface.ask_station_departure
+    @station_departure = object_by_name(@station_departure_name, stations)
     return if @station_departure.nil?
-    loop do
-      puts "\nВведите название конечной станции: "
-      @station_arrival_name = gets.chomp
-      break if @station_arrival_name.length > 0
-    end
-    @station_arrival = object_by_name(@station_arrival_name,stations)
+    @station_arrival_name = @interface.ask_station_arrival
+    @station_arrival = object_by_name(@station_arrival_name, stations)
     return if @station_arrival.nil?
     routes << Route.new(@route_name, @station_departure, @station_arrival)
+    @interface.successful_creating
   end
 
   def create_wagon
-    loop do
-      puts "\nВведите номер вагона: "
-      @wagon_number = gets.to_i
-      break if @wagon_number > 0
-    end
-    return unless object_by_number(@wagon_number,wagons).nil?
-    loop do
-      puts "\nВведите тип вагона (cargo или passenger): "
-      @wagon_type = gets.chomp.to_sym
-      break if @wagon_type == :cargo || @wagon_type == :passenger
-    end
+    @wagon_number = @interface.ask_wagon_number
+    return unless object_by_number(@wagon_number, wagons).nil?
+    @wagon_type = @interface.ask_wagon_type
     if @wagon_type == :cargo
       wagons << CargoWagon.new(@wagon_number)
+      @interface.successful_creating
     elsif @wagon_type == :passenger
       wagons << PassengerWagon.new(@wagon_number)
+      @interface.successful_creating
     end
   end
 
   def route_actions_menu(input)
     case input
-      when 1
-        route_add_station
-      when 2
-        route_remove_station
-      else
-        puts "\nТакого пункта меню нет"
+    when 1
+      route_add_station
+    when 2
+      route_remove_station
+    else
+      @interface.incorrect_choice
     end
   end
 
@@ -231,47 +174,39 @@ class RailRoad
 
   def train_actions_menu(input)
     case input
-      when 1
-        train_change_speed
-      when 2
-        train_change_station
-      when 3
-        train_add_route
-      else
-        puts "\nТакого пункта меню нет"
+    when 1
+      train_change_speed
+    when 2
+      train_change_station
+    when 3
+      train_add_route
+    else
+      @interface.incorrect_choice
     end
   end
 
   def train_change_speed
     request_train
-    loop do
-      puts "\n1 - Ускорить поезд\n2 - Замедлить поезд"
-      @speed_mode = gets.to_i
-    break if @speed_mode == 1 || @speed_mode == 2
-    end
-    loop do
-      puts "\nВведите значение изменения скорости: "
-      @speed_value = gets.to_i
-    break if @speed_value != 0
-    end
+    @speed_mode = @interface.ask_train_speed_mode
+    @speed_value = @interface.ask_train_speed_value
     if @speed_mode == 1
       @train.speed_up(@speed_value)
+      @interface.successful_action
     elsif @speed_mode == 2
       @train.speed_down(@speed_value)
+      @interface.successful_action
     end
   end
 
   def train_change_station
     request_train
-    loop do
-      puts "\n1 - Вперед на следующую станцию\n2 - Назад на предыдущую станцию"
-      @move_mode = gets.to_i
-    break if @move_mode == 1 || @move_mode == 2
-    end
+    @move_mode = @interface.ask_train_move_mode
     if @move_mode == 1
       @train.move_forward
+      @interface.successful_action
     elsif @move_mode == 2
       @train.move_back
+      @interface.successful_action
     end      
   end
 
@@ -283,12 +218,12 @@ class RailRoad
 
   def wagon_actions_menu(input)
     case input
-      when 1
-        wagon_connect_to
-      when 2
-        wagon_unconnect_from
-      else
-        puts "\nТакого пункта меню нет"
+    when 1
+      wagon_connect_to
+    when 2
+      wagon_unconnect_from
+    else
+      @interface.incorrect_choice
     end    
   end
 
@@ -306,28 +241,27 @@ class RailRoad
 
   def lists_menu(input)
     case input
-      when 1
-        stations_list
-      when 2
-        trains_on_station_list
-      else
-        puts "\nТакого пункта меню нет"
+    when 1
+      stations_list
+    when 2
+      trains_on_station_list
+    else
+      @interface.incorrect_choice
     end    
   end
 
   def stations_list
-    return puts "\nЕщё ни одной станции" if @stations.empty?
-    puts "\nСписок станций:"
-    @stations.each { |station| puts "\n[#{station.name}]" }
+    return @interface.stations_not_exist if @stations.empty?
+    @interface.stations_list
+    @stations.each { |station| @interface.station_name(station) }
   end
 
   def trains_on_station_list
     request_station
     return if @station.trains.empty?
-    puts "\nСписок поездов на станции #{@station.name}:\n"
+    @interface.trains_list_station_name(@station)
     @station.trains.each do |train|
-      puts " Номер поезда: #{train.number}\n Тип поезда: #{train.type}"
-      puts "----------------------------------------------------------\n"
+      @interface.trains_list_on_station(train)
     end
   end
 

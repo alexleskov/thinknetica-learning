@@ -1,5 +1,4 @@
 class Configuration
-  attr_reader :railroad
 
   def initialize
     load_sys_files
@@ -15,6 +14,7 @@ class Configuration
     require_relative 'wagon_cargo.rb'
     require_relative 'wagon_passenger.rb'
     require_relative 'railroad.rb'
+    require_relative 'interface.rb'
   end
 
 end

@@ -14,7 +14,7 @@ class Train
   def speed_down(value)
     if speed >= value
       @speed -= value
-    elsif
+    else
       @speed = 0
     end
   end
