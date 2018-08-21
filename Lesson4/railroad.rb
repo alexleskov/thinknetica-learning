@@ -16,7 +16,7 @@ class RailRoad
       abort if input == 0
       menu_cases(input)
     end
-  end 
+  end
 
   #Нарушится принцип инкапсуляции.
   #При этом, нет необходимости, чтобы методы были доступны извне, в том числе и в подклассах этого класса.
@@ -24,47 +24,47 @@ class RailRoad
   private
 
   def choice
-    input = loop do
-      i = @interface.ask_choice
-      break(i.to_i) if i.length > 0
-    end
-      input
+    @interface.ask_choice
   end
 
   def object_by_name(initial_object, array)
-    index = array.index { |object_in_array| object_in_array.name == initial_object }
+    index = array.index { |object| object.name == initial_object }
     return if index.nil?
     array[index] 
   end
 
   def object_by_number(initial_object, array)
-    index = array.index { |object_in_array| object_in_array.number == initial_object }
+    index = array.index { |object| object.number == initial_object }
     return if index.nil?
     array[index] 
   end
 
   def request_train
-    @train_number = @interface.ask_train_number
-    @train = object_by_number(@train_number, trains)
-    return if @train.nil?
+    train_number = @interface.ask_train_number
+    train = object_by_number(train_number, trains)
+    return if train.nil?
+    train
   end
 
   def request_route
-    @route_name = @interface.ask_route_name
-    @route = object_by_name(@route_name, routes)
-    return if @route.nil?    
+    route_name = @interface.ask_route_name
+    route = object_by_name(route_name, routes)
+    return if route.nil?
+    route    
   end
 
   def request_station
-    @station_name = @interface.ask_station_name
-    @station = object_by_name(@station_name, stations)
-    return if @station.nil?
+    station_name = @interface.ask_station_name
+    station = object_by_name(station_name, stations)
+    return if station.nil?
+    station
   end
 
   def request_wagon
-    @wagon_number = @interface.ask_wagon_number
-    @wagon = object_by_number(@wagon_number, wagons)
-    return if @wagon.nil?     
+    wagon_number = @interface.ask_wagon_number
+    wagon = object_by_number(wagon_number, wagons)
+    return if wagon.nil?     
+    wagon
   end
 
   def menu_cases(input) 
@@ -105,46 +105,47 @@ class RailRoad
   end
 
   def create_station
-    @station_name = @interface.ask_station_name
-    return unless object_by_name(@station_name, stations).nil?
-    stations << Station.new(@station_name)
+    station_name = @interface.ask_station_name
+    return @interface.error unless object_by_name(station_name, stations).nil?
+    @stations << Station.new(station_name)
     @interface.successful_creating
   end
 
   def create_train
-    @train_number = @interface.ask_train_number
-    return unless object_by_number(@train_number, trains).nil?
-    @train_type = @interface.ask_train_type
-    if @train_type == :cargo
-      trains << CargoTrain.new(@train_number)
+    train_number = @interface.ask_train_number
+    return @interface.error unless object_by_number(train_number, trains).nil?
+    train_type = @interface.ask_train_type
+    if train_type == :cargo
+      @trains << CargoTrain.new(train_number, train_type)
       @interface.successful_creating
-    elsif @train_type == :passenger
-      trains << PassengerTrain.new(@train_number)
+    elsif train_type == :passenger
+      @trains << PassengerTrain.new(train_number, train_type)
       @interface.successful_creating
     end
   end
 
   def create_route
-    @route_name = @interface.ask_route_name
-    @station_departure_name = @interface.ask_station_departure
-    @station_departure = object_by_name(@station_departure_name, stations)
-    return if @station_departure.nil?
-    @station_arrival_name = @interface.ask_station_arrival
-    @station_arrival = object_by_name(@station_arrival_name, stations)
-    return if @station_arrival.nil?
-    routes << Route.new(@route_name, @station_departure, @station_arrival)
+    route_name = @interface.ask_route_name
+    return @interface.error unless object_by_name(route_name, routes).nil?
+    station_departure_name = @interface.ask_station_departure
+    station_departure = object_by_name(station_departure_name, stations)
+    return @interface.error if station_departure.nil?
+    station_arrival_name = @interface.ask_station_arrival
+    station_arrival = object_by_name(station_arrival_name, stations)
+    return @interface.error if station_arrival.nil?
+    @routes << Route.new(route_name, station_departure, station_arrival)
     @interface.successful_creating
   end
 
   def create_wagon
-    @wagon_number = @interface.ask_wagon_number
-    return unless object_by_number(@wagon_number, wagons).nil?
-    @wagon_type = @interface.ask_wagon_type
-    if @wagon_type == :cargo
-      wagons << CargoWagon.new(@wagon_number)
+    wagon_number = @interface.ask_wagon_number
+    return @interface.error unless object_by_number(wagon_number, wagons).nil?
+    wagon_type = @interface.ask_wagon_type
+    if wagon_type == :cargo
+      @wagons << CargoWagon.new(wagon_number, wagon_type)
       @interface.successful_creating
-    elsif @wagon_type == :passenger
-      wagons << PassengerWagon.new(@wagon_number)
+    elsif wagon_type == :passenger
+      @wagons << PassengerWagon.new(wagon_number, wagon_type)
       @interface.successful_creating
     end
   end
@@ -161,15 +162,19 @@ class RailRoad
   end
 
   def route_add_station
-    request_route
-    request_station
-    @route.station_add(@station)
+    route = request_route
+    station = request_station
+    return @interface.error if route.nil? || station.nil? || route.stations.include?(station)
+    route.station_add(station)
+    @interface.successful_action
   end
 
   def route_remove_station
-    request_route
-    request_station
-    @route.station_remove(@station)    
+    route = request_route
+    station = request_station
+    return @interface.error if route.nil? || station.nil? || !route.stations.include?(station)
+    route.station_remove(station)
+    @interface.successful_action    
   end
 
   def train_actions_menu(input)
@@ -186,34 +191,37 @@ class RailRoad
   end
 
   def train_change_speed
-    request_train
-    @speed_mode = @interface.ask_train_speed_mode
-    @speed_value = @interface.ask_train_speed_value
-    if @speed_mode == 1
-      @train.speed_up(@speed_value)
+    train = request_train
+    return @interface.error if train.nil?
+    speed_mode = @interface.ask_train_speed_mode
+    speed_value = @interface.ask_train_speed_value
+    if speed_mode == 1
+      train.speed_up(speed_value)
       @interface.successful_action
-    elsif @speed_mode == 2
-      @train.speed_down(@speed_value)
+    elsif speed_mode == 2
+      train.speed_down(speed_value)
       @interface.successful_action
     end
   end
 
   def train_change_station
-    request_train
-    @move_mode = @interface.ask_train_move_mode
-    if @move_mode == 1
-      @train.move_forward
+    train = request_train
+    return @interface.error if train.nil?
+    move_mode = @interface.ask_train_move_mode
+    if move_mode == 1
+      train.move_forward
       @interface.successful_action
-    elsif @move_mode == 2
-      @train.move_back
+    elsif move_mode == 2
+      train.move_back
       @interface.successful_action
     end      
   end
 
   def train_add_route
-    request_train
-    request_route
-    @train.route_add(@route)    
+    train = request_train
+    route = request_route
+    return @interface.error if train.nil? || route.nil?
+    train.route_add(route)    
   end
 
   def wagon_actions_menu(input)
@@ -228,15 +236,19 @@ class RailRoad
   end
 
   def wagon_connect_to
-    request_wagon
-    request_train
-    @wagon.connect_to(@train)
+    wagon = request_wagon
+    train = request_train
+    return @interface.error if wagon.nil? || train.nil? || train.wagons.include?(wagon) || train.type != wagon.type
+    train.wagon_add(wagon)
+    @interface.successful_action
   end
 
   def wagon_unconnect_from
-    request_wagon
-    request_train
-    @wagon.unconnect_from(@train)
+    wagon = request_wagon
+    train = request_train
+    return @interface.error if wagon.nil? || train.nil? || !train.wagons.include?(wagon) || train.type != wagon.type
+    train.wagon_remove(wagon)
+    @interface.successful_action
   end
 
   def lists_menu(input)
@@ -257,10 +269,10 @@ class RailRoad
   end
 
   def trains_on_station_list
-    request_station
-    return if @station.trains.empty?
-    @interface.trains_list_station_name(@station)
-    @station.trains.each do |train|
+    station = request_station
+    return @interface.error if station.trains.empty?
+    @interface.trains_list_station_name(station)
+    station.trains.each do |train|
       @interface.trains_list_on_station(train)
     end
   end

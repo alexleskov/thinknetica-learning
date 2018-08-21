@@ -1,10 +1,11 @@
 class Train
   attr_reader :type, :speed, :number, :wagons
 
-  def initialize(number)
+  def initialize(number, type)
     @number = number
     @speed = 0
     @wagons = []
+    @type = type
   end
 
   def speed_up(value)
@@ -20,10 +21,10 @@ class Train
   end
 
   def wagon_add(wagon)
-    return if @wagons.include?(wagon) && !wagon.current_train.nil? && !wagon.is_a?(wagon)
+    return if @wagons.include?(wagon) || !wagon.current_train.nil? || !wagon.is_a?(Wagon)
     if speed == 0 && self.type == wagon.type
       @wagons << wagon
-      wagon.connect_to(self)
+      wagon.set_current_train(self)
     end
   end
 
@@ -31,7 +32,7 @@ class Train
     return unless @wagons.include?(wagon)
     if speed == 0
       @wagons.delete(wagon)
-      wagon.unconnect_from(self)
+      wagon.set_current_train(nil)
     end
   end
 

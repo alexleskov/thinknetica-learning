@@ -14,9 +14,12 @@ class Interface
   end
 
   def ask_choice
-    puts "\nУкажите цифру пункта нужного меню ('0' - назад/выход):"
-    puts "-----------------------------------\n"
-    i = gets.chomp
+    loop do
+      puts "\nУкажите цифру пункта нужного меню ('0' - назад/выход):"
+      puts "-----------------------------------\n"
+      input = gets.chomp
+      break(input.to_i) if input.length > 0
+    end
   end
 
   def ask_train_number
@@ -41,7 +44,7 @@ class Interface
     loop do
       puts "\n1 - Ускорить поезд\n2 - Замедлить поезд"
       @speed_mode = gets.to_i
-    break if @speed_mode == 1 || @speed_mode == 2
+      break if @speed_mode == 1 || @speed_mode == 2
     end
     @speed_mode    
   end
@@ -173,7 +176,10 @@ class Interface
   end
 
   def successful_action
-    puts "Успешно"
+    puts "\nУспешно"
   end
 
+  def error
+    puts "\nОшибка. Введнные данные некорректны."
+  end
 end
