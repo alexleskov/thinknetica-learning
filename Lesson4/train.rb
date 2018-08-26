@@ -21,8 +21,8 @@ class Train
   end
 
   def wagon_add(wagon)
-    return if @wagons.include?(wagon) || !wagon.current_train.nil? || !wagon.is_a?(Wagon)
-    if speed == 0 && self.type == wagon.type
+    return if @wagons.include?(wagon) || wagon.current_train
+    if speed == 0
       @wagons << wagon
       wagon.set_current_train(self)
     end

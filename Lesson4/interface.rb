@@ -25,46 +25,41 @@ class Interface
   def ask_train_number
     loop do
       puts "\nВведите номер поезда: "
-      @train_number = gets.to_i
-      break if @train_number > 0
+      train_number = gets.to_i
+      break if train_number > 0
     end
-    @train_number
   end
 
   def ask_train_type
     loop do
       puts "\nВведите тип поезда (cargo или passenger): "
-      @train_type = gets.chomp.to_sym
-      break if @train_type == :cargo || @train_type == :passenger
+      train_type = gets.chomp.to_sym
+      break if train_type == :cargo || train_type == :passenger
     end
-    @train_type
   end
 
   def ask_train_speed_mode
     loop do
       puts "\n1 - Ускорить поезд\n2 - Замедлить поезд"
-      @speed_mode = gets.to_i
-      break if @speed_mode == 1 || @speed_mode == 2
+      speed_mode = gets.to_i
+      break if speed_mode == 1 || speed_mode == 2
     end
-    @speed_mode    
   end
 
   def ask_train_speed_value
     loop do
       puts "\nВведите значение изменения скорости: "
-      @speed_value = gets.to_i
-      break if @speed_value != 0
+      speed_value = gets.to_i
+      break if speed_value != 0
     end
-    @speed_value
   end
 
   def ask_train_move_mode
     loop do
       puts "\n1 - Вперед на следующую станцию\n2 - Назад на предыдущую станцию"
-      @move_mode = gets.to_i
-      break if @move_mode == 1 || @move_mode == 2
+      move_mode = gets.to_i
+      break if move_mode == 1 || move_mode == 2
     end
-    @move_mode
   end
 
   def trains_list_station_name(station)
@@ -79,37 +74,33 @@ class Interface
   def ask_route_name
     loop do
       puts "\nВведите название маршрута: "
-      @route_name = gets.chomp
-      break if @route_name.length > 0
+      route_name = gets.chomp
+      break if route_name.length > 0
     end
-    @route_name
   end
 
   def ask_station_departure
     loop do
       puts "\nВведите название начальной станции: "
-      @station_departure_name = gets.chomp
-      break if @station_departure_name.length > 0
+      station_departure_name = gets.chomp
+      break if station_departure_name.length > 0
     end
-    @station_departure_name
   end
 
   def ask_station_arrival
     loop do
       puts "\nВведите название конечной станции: "
-      @station_arrival_name = gets.chomp
-      break if @station_arrival_name.length > 0
+      station_arrival_name = gets.chomp
+      break if station_arrival_name.length > 0
     end
-    @station_arrival_name
   end
 
   def ask_station_name
     loop do
       puts "\nВведите название станции: "
-      @station_name = gets.chomp
-      break if @station_name.length > 0
+      station_name = gets.chomp
+      break if station_name.length > 0
     end
-    @station_name
   end
 
   def station_name(station)
@@ -127,19 +118,17 @@ class Interface
   def ask_wagon_number
     loop do
       puts "\nВведите номер вагона: "
-      @wagon_number = gets.to_i
-      break if @wagon_number > 0
+      wagon_number = gets.to_i
+      break if wagon_number > 0
     end
-    @wagon_number
   end
 
   def ask_wagon_type
     loop do
       puts "\nВведите тип вагона (cargo или passenger): "
-      @wagon_type = gets.chomp.to_sym
-      break if @wagon_type == :cargo || @wagon_type == :passenger
+      wagon_type = gets.chomp.to_sym
+      break if wagon_type == :cargo || wagon_type == :passenger
     end
-    @wagon_type
   end
 
   def creation_menu
