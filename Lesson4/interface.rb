@@ -26,7 +26,7 @@ class Interface
     loop do
       puts "\nВведите номер поезда: "
       train_number = gets.to_i
-      break if train_number > 0
+      break(train_number) if train_number > 0
     end
   end
 
@@ -34,7 +34,7 @@ class Interface
     loop do
       puts "\nВведите тип поезда (cargo или passenger): "
       train_type = gets.chomp.to_sym
-      break if train_type == :cargo || train_type == :passenger
+      break(train_type) if train_type == :cargo || train_type == :passenger
     end
   end
 
@@ -42,7 +42,7 @@ class Interface
     loop do
       puts "\n1 - Ускорить поезд\n2 - Замедлить поезд"
       speed_mode = gets.to_i
-      break if speed_mode == 1 || speed_mode == 2
+      break(speed_mode) if speed_mode == 1 || speed_mode == 2
     end
   end
 
@@ -50,7 +50,7 @@ class Interface
     loop do
       puts "\nВведите значение изменения скорости: "
       speed_value = gets.to_i
-      break if speed_value != 0
+      break(speed_value) if speed_value != 0
     end
   end
 
@@ -58,24 +58,15 @@ class Interface
     loop do
       puts "\n1 - Вперед на следующую станцию\n2 - Назад на предыдущую станцию"
       move_mode = gets.to_i
-      break if move_mode == 1 || move_mode == 2
+      break(move_mode) if move_mode == 1 || move_mode == 2
     end
-  end
-
-  def trains_list_station_name(station)
-    puts "\nСписок поездов на станции #{station.name}:\n"
-  end
-
-  def trains_list_on_station(train)
-    puts " Номер поезда: #{train.number}, тип поезда: #{train.type}"
-    puts "-----------------------------------------------\n"    
   end
 
   def ask_route_name
     loop do
       puts "\nВведите название маршрута: "
       route_name = gets.chomp
-      break if route_name.length > 0
+      break(route_name) if route_name.length > 0
     end
   end
 
@@ -83,7 +74,7 @@ class Interface
     loop do
       puts "\nВведите название начальной станции: "
       station_departure_name = gets.chomp
-      break if station_departure_name.length > 0
+      break(station_departure_name) if station_departure_name.length > 0
     end
   end
 
@@ -91,7 +82,7 @@ class Interface
     loop do
       puts "\nВведите название конечной станции: "
       station_arrival_name = gets.chomp
-      break if station_arrival_name.length > 0
+      break(station_arrival_name) if station_arrival_name.length > 0
     end
   end
 
@@ -99,27 +90,15 @@ class Interface
     loop do
       puts "\nВведите название станции: "
       station_name = gets.chomp
-      break if station_name.length > 0
+      break(station_name) if station_name.length > 0
     end
-  end
-
-  def station_name(station)
-    puts "\n[#{station.name}]"
-  end
-
-  def stations_not_exist
-    puts "\nЕщё нет ни одной станции"
-  end
-
-  def stations_list
-    puts "\nСписок станций:"
   end
 
   def ask_wagon_number
     loop do
       puts "\nВведите номер вагона: "
       wagon_number = gets.to_i
-      break if wagon_number > 0
+      break(wagon_number) if wagon_number > 0
     end
   end
 
@@ -127,8 +106,62 @@ class Interface
     loop do
       puts "\nВведите тип вагона (cargo или passenger): "
       wagon_type = gets.chomp.to_sym
-      break if wagon_type == :cargo || wagon_type == :passenger
+      break(wagon_type) if wagon_type == :cargo || wagon_type == :passenger
     end
+  end
+
+  def wagon_data(wagon)
+    puts " Номер вагона: #{wagon.number}, тип вагона: #{wagon.type}"
+    puts "-----------------------------------------------\n"    
+  end
+
+  def wagons_not_exist
+    puts "\n[Ещё нет ни одного вагона]"
+  end
+
+  def wagons_list
+    puts "\nСписок вагонов:"
+  end
+
+  def route_name(route)
+    puts "#{route.name}"
+  end
+
+  def routes_not_exist
+    puts "\n[Ещё нет ни одного маршрута]"
+  end
+
+  def routes_list
+    puts "\nСписок маршрутов:"
+  end
+
+  def station_name(station)
+    puts "#{station.name}"
+  end
+
+  def stations_not_exist
+    puts "\n[Ещё нет ни одной станции]"
+  end
+
+  def stations_list
+    puts "\nСписок станций:"
+  end
+
+  def trains_list_station_name(station)
+    puts "\nСписок поездов на станции #{station.name}:\n"
+  end
+
+  def train_data(train)
+    puts " Номер поезда: #{train.number}, тип поезда: #{train.type}"
+    puts "-----------------------------------------------\n"    
+  end
+
+  def trains_not_exist
+     puts "\n[Ещё нет ни одного поезда]"   
+  end
+
+  def trains_list
+    puts "\nСписок поездов:"
   end
 
   def creation_menu
@@ -157,18 +190,18 @@ class Interface
   end
 
   def incorrect_choice
-    puts "\nТакого пункта меню нет"
+    puts "\n[Такого пункта меню нет]"
   end
 
   def successful_creating
-    puts "\nУспешно создано"
+    puts "\n[Успешно создано]"
   end
 
   def successful_action
-    puts "\nУспешно"
+    puts "\n[Успешно]"
   end
 
   def error
-    puts "\nОшибка. Введнные данные некорректны."
+    puts "\n[ОШИБКА: Введнные данные некорректны]"
   end
 end

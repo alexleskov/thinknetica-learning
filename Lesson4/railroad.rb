@@ -133,8 +133,10 @@ class RailRoad
   end
 
   def create_route
+    return stations_list if stations.empty? || stations.size < 2
     route_name = @interface.ask_route_name
     return @interface.error unless object_by_name(route_name, routes).nil?
+    stations_list
     station_departure_name = @interface.ask_station_departure
     station_departure = object_by_name(station_departure_name, stations)
     return @interface.error if station_departure.nil?
@@ -170,19 +172,33 @@ class RailRoad
   end
 
   def route_add_station
-    route = request_route
-    station = request_station
-    return @interface.error if route.nil? || station.nil?
-    result = route.station_add(station)
-    check_result(result)
+    if routes.empty? || @stations.empty?
+      routes_list
+      stations_list
+    else
+      routes_list
+      route = request_route
+      stations_list
+      station = request_station
+      return @interface.error if route.nil? || station.nil?
+      result = route.station_add(station)
+      check_result(result)
+    end
   end
 
   def route_remove_station
-    route = request_route
-    station = request_station
-    return @interface.error if route.nil? || station.nil?
-    result = route.station_remove(station)
-    check_result(result)
+    if routes.empty? || @stations.empty?
+      routes_list
+      stations_list
+    else
+      routes_list
+      route = request_route
+      stations_list
+      station = request_station
+      return @interface.error if route.nil? || station.nil?
+      result = route.station_remove(station)
+      check_result(result)
+    end
   end
 
   def train_actions_menu(input)
@@ -199,6 +215,8 @@ class RailRoad
   end
 
   def train_change_speed
+    return @interface.trains_not_exist if trains.empty?
+    trains_list
     train = request_train
     return @interface.error if train.nil?
     speed_mode = @interface.ask_train_speed_mode
@@ -213,6 +231,8 @@ class RailRoad
   end
 
   def train_change_station
+    return @interface.trains_not_exist if trains.empty?
+    trains_list
     train = request_train
     return @interface.error if train.nil?
     move_mode = @interface.ask_train_move_mode
@@ -226,11 +246,18 @@ class RailRoad
   end
 
   def train_add_route
-    train = request_train
-    route = request_route
-    return @interface.error if train.nil? || route.nil?
-    result = train.route_add(route)
-    check_result(result)
+    if trains.empty? || @routes.empty?
+      trains_list
+      routes_list
+    else
+      trains_list
+      train = request_train
+      routes_list
+      route = request_route
+      return @interface.error if train.nil? || route.nil?
+      result = train.route_add(route)
+      check_result(result)
+    end
   end
 
   def wagon_actions_menu(input)
@@ -245,19 +272,33 @@ class RailRoad
   end
 
   def wagon_connect_to
-    wagon = request_wagon
-    train = request_train
-    return @interface.error if wagon.nil? || train.nil?
-    result = train.wagon_add(wagon)
-    check_result(result)
+    if wagons.empty? || @trains.empty?
+      wagons_list
+      trains_list
+    else
+      wagons_list
+      wagon = request_wagon
+      trains_list
+      train = request_train
+      return @interface.error if wagon.nil? || train.nil?
+      result = train.wagon_add(wagon)
+      check_result(result)
+    end
   end
 
   def wagon_unconnect_from
-    wagon = request_wagon
-    train = request_train
-    return @interface.error if wagon.nil? || train.nil?
-    result = train.wagon_remove(wagon)
-    check_result(result)
+    if wagons.empty? || @trains.empty?
+      wagons_list
+      trains_list
+    else
+      wagons_list
+      wagon = request_wagon
+      trains_list
+      train = request_train
+      return @interface.error if wagon.nil? || train.nil?
+      result = train.wagon_remove(wagon)
+      check_result(result)
+    end
   end
 
   def lists_menu(input)
@@ -277,13 +318,31 @@ class RailRoad
     @stations.each { |station| @interface.station_name(station) }
   end
 
+  def trains_list
+    return @interface.trains_not_exist if @trains.empty?
+    @interface.trains_list
+    @trains.each { |train| @interface.train_data(train) }
+  end
+
+  def routes_list
+    return @interface.routes_not_exist if @routes.empty?
+    @interface.routes_list
+    @routes.each { |route| @interface.route_name(route) }    
+  end
+
+  def wagons_list
+    return @interface.wagons_not_exist if @wagons.empty?
+    @interface.wagons_list
+    @wagons.each { |wagon| @interface.wagon_data(wagon) }    
+  end
+
   def trains_on_station_list
+    return @interface.stations_not_exist if @stations.empty?
+    stations_list
     station = request_station
-    return @interface.error if station.trains.empty?
+    return @interface.trains_not_exist if station.trains.empty?
     @interface.trains_list_station_name(station)
-    station.trains.each do |train|
-      @interface.trains_list_on_station(train)
-    end
+    station.trains.each { |train| @interface.train_data(train) }
   end
 
 end
