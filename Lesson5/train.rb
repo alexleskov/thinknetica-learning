@@ -5,23 +5,25 @@ class Train
   include CompanyName
   include InstanceCounter
 
-  @@all = []
+  class << self
+    attr_reader :all
+  end
+
+  @all = {}
 
   def self.find(train_number)
-    index = @@all.index { |object| object.number == train_number }
-    return if index.nil?
-    @@all[index] 
+    all[train_number]
   end
 
   attr_reader :type, :speed, :number, :wagons
 
   def initialize(number, type)
-    register_instance
     @number = number
     @speed = 0
     @wagons = []
     @type = type
-    @@all << self
+    self.class.all[number] = self
+    register_instance
   end
 
   def speed_up(value)

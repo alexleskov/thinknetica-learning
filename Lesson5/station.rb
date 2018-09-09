@@ -12,10 +12,10 @@ class Station
   attr_reader :trains, :name
 
   def initialize(name)
-    register_instance
     @name = name
     @trains = []
     self.class.all << self
+    register_instance
   end
 
   def train_get(train)

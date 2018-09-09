@@ -6,9 +6,9 @@ class Route
 
   def initialize(name, departure, arrival)
     if departure.instance_of?(Station) && arrival.instance_of?(Station)
-      register_instance
       @name = name
       @stations = [departure, arrival]
+      register_instance
     end
   end
 
