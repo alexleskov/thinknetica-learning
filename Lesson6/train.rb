@@ -1,11 +1,11 @@
 require_relative 'company_name.rb'
 require_relative 'instance_counter.rb'
-require_relative 'valid.rb'
+require_relative 'validation.rb'
 
 class Train
   include CompanyName
   include InstanceCounter
-  include Valid
+  include Validation
 
   NUMBER_FORMAT = /^[a-zA-Z\d]{3}-?[a-zA-Z\d]{2}$/
 

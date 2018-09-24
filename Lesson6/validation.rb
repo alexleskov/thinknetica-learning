@@ -1,4 +1,4 @@
-module Valid
+module Validation
 
   def valid?
     validate!

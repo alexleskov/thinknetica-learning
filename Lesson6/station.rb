@@ -1,9 +1,9 @@
 require_relative 'instance_counter.rb'
-require_relative 'valid.rb'
+require_relative 'validation.rb'
 
 class Station
   include InstanceCounter
-  include Valid
+  include Validation
   
   class << self
     attr_reader :all

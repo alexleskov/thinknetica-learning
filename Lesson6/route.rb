@@ -1,9 +1,9 @@
 require_relative 'instance_counter.rb'
-require_relative 'valid.rb'
+require_relative 'validation.rb'
 
 class Route
   include InstanceCounter
-  include Valid
+  include Validation
 
   attr_reader :stations, :name
 
@@ -16,8 +16,7 @@ class Route
 
   def validate!
     raise "Необходимо указать корректное название для маршрута. Не менее 2-х символов" if name.nil? || name.length < 2
-    raise "Указанной начальной станции не существует" unless stations[0].instance_of?(Station)
-    raise "Указанной конечной станции не существует" unless stations[1].instance_of?(Station)
+    raise "Станции должны является объектом класса Station" if @stations.any? { |station| !station.instance_of?(Station) }
   end
 
   def station_add(station)

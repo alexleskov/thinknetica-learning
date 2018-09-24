@@ -1,9 +1,9 @@
 require_relative 'company_name.rb'
-require_relative 'valid.rb'
+require_relative 'validation.rb'
 
 class Wagon
   include CompanyName
-  include Valid
+  include Validation
 
   attr_reader :number, :type, :current_train
 

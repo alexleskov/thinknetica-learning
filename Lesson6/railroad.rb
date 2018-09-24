@@ -356,9 +356,5 @@ class RailRoad
     @interface.trains_list_station_name(station)
     station.trains.each { |train| @interface.train_data(train) }
   end
-<<<<<<< HEAD
 
-=======
-  
->>>>>>> 280d8d213ed406ef923172ce959703865679a022
 end
