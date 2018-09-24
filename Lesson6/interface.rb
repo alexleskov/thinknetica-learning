@@ -204,8 +204,8 @@ class Interface
     puts "\n[ОШИБКА: Введнные данные некорректны]"
   end
 
-  def train_creating_error(e)
-    puts "\nПри создании поезда возникла ошибка. Попробуйте еще раз."
+  def creating_error(e)
+    puts "\nПри создании объекта возникла ошибка. Попробуйте еще раз."
     puts e.inspect
   end
 

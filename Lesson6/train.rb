@@ -1,9 +1,13 @@
 require_relative 'company_name.rb'
 require_relative 'instance_counter.rb'
+require_relative 'valid.rb'
 
 class Train
   include CompanyName
   include InstanceCounter
+  include Valid
+
+  NUMBER_FORMAT = /^[a-zA-Z\d]{3}-?[a-zA-Z\d]{2}$/
 
   class << self
     attr_reader :all
@@ -16,8 +20,6 @@ class Train
   end
 
   attr_reader :type, :speed, :number, :wagons
-
-  NUMBER_FORMAT = /([\w]){3}-?([\w]){2}/
 
   def initialize(number, type)
     @number = number
@@ -33,13 +35,6 @@ class Train
     raise "Необходимо указать номер для поезда" if number.nil?
     raise "Необходимо указать корректный формат для номера поезда" if number !~ NUMBER_FORMAT
     raise "Необходимо указать верный тип для поезда: cargo или passenger" unless [:cargo,:passenger].include?(type)
-    true
-  end
-
-  def valid?
-    validate!
-  rescue
-    false
   end
 
   def speed_up(value)

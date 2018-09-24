@@ -1,7 +1,9 @@
 require_relative 'instance_counter.rb'
+require_relative 'valid.rb'
 
 class Station
   include InstanceCounter
+  include Valid
   
   class << self
     attr_reader :all
@@ -21,14 +23,7 @@ class Station
 
   def validate!
     raise "Необходимо указать корректное название для станции. Не менее 2-х символов" if name.nil? || name.length < 2
-    true
   end
-
-  def valid?
-    validate!
-  rescue
-    false
-  end  
 
   def train_get(train)
     return if @trains.include?(train) || !train.is_a?(Train)  

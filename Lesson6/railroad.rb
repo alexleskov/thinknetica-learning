@@ -117,6 +117,9 @@ class RailRoad
     return @interface.error unless object_by_name(station_name, stations).nil?
     @stations << Station.new(station_name)
     @interface.successful_creating
+    rescue RuntimeError => e
+      @interface.creating_error(e)
+      retry
   end
 
   def create_train
@@ -133,8 +136,8 @@ class RailRoad
       @interface.train_data(new_train)
     end
     rescue RuntimeError => e
-      @interface.train_creating_error(e)
-      create_train
+      @interface.creating_error(e)
+      retry
   end
 
   def create_route
@@ -144,12 +147,13 @@ class RailRoad
     stations_list
     station_departure_name = @interface.ask_station_departure
     station_departure = object_by_name(station_departure_name, stations)
-    return @interface.error if station_departure.nil?
     station_arrival_name = @interface.ask_station_arrival
     station_arrival = object_by_name(station_arrival_name, stations)
-    return @interface.error if station_arrival.nil?
     @routes << Route.new(route_name, station_departure, station_arrival)
     @interface.successful_creating
+    rescue RuntimeError => e
+      @interface.creating_error(e)
+      retry
   end
 
   def create_wagon
@@ -163,6 +167,9 @@ class RailRoad
       @wagons << PassengerWagon.new(wagon_number)
       @interface.successful_creating
     end
+    rescue RuntimeError => e
+      @interface.creating_error(e)
+      retry    
   end
 
   def route_actions_menu(input)
@@ -349,4 +356,5 @@ class RailRoad
     @interface.trains_list_station_name(station)
     station.trains.each { |train| @interface.train_data(train) }
   end
+
 end
