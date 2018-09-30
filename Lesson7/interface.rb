@@ -133,14 +133,6 @@ class Interface
     end
   end
 
-  def ask_wagon_change_seats
-    loop do
-      puts "\nВведите количество занятых мест в вагоне: "
-      wagon_seats = gets.to_i
-      break(wagon_seats) if wagon_seats > 0
-    end
-  end
-
   def wagons_list_train_number(train)
     puts "\nСписок вагонов у поезда с номером #{train.number}\n"
   end
@@ -148,11 +140,13 @@ class Interface
   def wagon_data(wagon)
     attributes = {}
     if wagon.type == :cargo
-      attributes["свободный объем"] = [wagon.volume]
-      attributes["занятый объем"] = [wagon.occupied_volume]
+      attributes["общий объем"] = [wagon.capacity]
+      attributes["свободный объем"] = [wagon.free_capacity]
+      attributes["занятый объем"] = [wagon.occupied_capacity]
     elsif wagon.type == :passenger
-      attributes["свободные места"] = [wagon.seats]
-      attributes["занятые места"] = [wagon.occupied_seats]
+      attributes["всего мест"] = [wagon.capacity]
+      attributes["свободные места"] = [wagon.free_capacity]
+      attributes["занятые места"] = [wagon.occupied_capacity]
     end
     print " Номер вагона: #{wagon.number}, тип вагона: #{wagon.type}, "
     attributes.each { |attribute, value| print "#{attribute}: #{value}, " }

@@ -1,23 +1,13 @@
 class PassengerWagon < Wagon
-  attr_reader :seats, :occupied_seats 
 
-  def initialize(number, seats, occupied_seats = 0)
-    @seats = seats
-    @occupied_seats = occupied_seats
-    super(number, :passenger)
+  CAPACITY_CHANGE_VALUE = 1
+
+  def initialize(number, capacity)
+    super(number, capacity, :passenger)
   end
 
-  def take_a_seat
-    raise "Все места в вагоне уже заняты" if seats == 0
-    if seats > 0
-      @seats -= 1
-      @occupied_seats +=1
-    end
+  def to_fill
+    raise "Все места в вагоне уже заняты" if free_capacity == 0
+    super(CAPACITY_CHANGE_VALUE)
   end
-
-  def validate!
-    raise "Необходимо указать корректное количество мест в вагоне" if seats.nil? || seats <= 0
-    super
-  end
-
 end

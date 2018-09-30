@@ -323,10 +323,10 @@ class RailRoad
     return @interface.error if wagon.nil?
     if wagon.type == :cargo
       value = @interface.ask_wagon_change_volume
-      wagon.fill_the_volume(value)
+      wagon.to_fill(value)
       @interface.successful_action
     elsif wagon.type == :passenger
-      wagon.take_a_seat
+      wagon.to_fill
       @interface.successful_action
     end
     @interface.wagon_data(wagon)
