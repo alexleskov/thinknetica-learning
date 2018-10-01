@@ -35,9 +35,4 @@ class Wagon
       @occupied_capacity = @capacity - @free_capacity -= value
     end
   end
-
-  protected
-
-
-
 end
