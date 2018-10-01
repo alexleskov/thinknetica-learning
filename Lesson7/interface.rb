@@ -139,17 +139,11 @@ class Interface
 
   def wagon_data(wagon)
     attributes = {}
-    if wagon.type == :cargo
-      attributes["общий объем"] = [wagon.capacity]
-      attributes["свободный объем"] = [wagon.free_capacity]
-      attributes["занятый объем"] = [wagon.occupied_capacity]
-    elsif wagon.type == :passenger
-      attributes["всего мест"] = [wagon.capacity]
-      attributes["свободные места"] = [wagon.free_capacity]
-      attributes["занятые места"] = [wagon.occupied_capacity]
-    end
+    attributes["вместимость"] = wagon.capacity
+    attributes["свободно"] = wagon.free_capacity
+    attributes["занято"] = wagon.occupied_capacity
     print " Номер вагона: #{wagon.number}, тип вагона: #{wagon.type}, "
-    attributes.each { |attribute, value| print "#{attribute}: #{value}, " }
+    attributes.each { |attribute, value| print "#{attribute}: #{value} #{wagon.type == :passenger ? "мест" : "кубометров"}, " }
     puts "\n--------------------------------------------------------------------------\n"    
   end
 

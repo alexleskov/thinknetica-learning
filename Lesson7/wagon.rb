@@ -5,14 +5,13 @@ class Wagon
   include CompanyName
   include Validation
 
-  attr_reader :number, :type, :current_train, :capacity, :occupied_capacity, :free_capacity
+  attr_reader :number, :type, :current_train, :capacity, :occupied_capacity
 
-  def initialize(number, capacity, type, occupied_capacity = 0, free_capacity = capacity)
+  def initialize(number, capacity, type)
     @number = number
     @type = type
     @capacity = capacity
-    @free_capacity = free_capacity
-    @occupied_capacity = occupied_capacity
+    @occupied_capacity = 0
     validate!
   end
 
@@ -26,11 +25,19 @@ class Wagon
     @current_train = train
   end
 
+  def free_capacity
+    @free_capacity = @capacity - @occupied_capacity
+  end
+
   def to_fill(value)
     raise "Значение заполняемости должно быть больше нуля" if value <= 0
     if free_capacity >= value
       @occupied_capacity = @capacity - @free_capacity -= value
     end
   end
+
+  protected
+
+
 
 end

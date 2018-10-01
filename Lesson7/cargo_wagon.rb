@@ -4,7 +4,7 @@ class CargoWagon < Wagon
   end
 
   def to_fill(value)
-    raise "Заполняемый объем больше вмещаемости вагона" if free_capacity < value
+    raise "Заполняемый объем (#{value} кубометров) больше остаточной вместимости вагона (#{free_capacity} кубометров). Вместимость: #{capacity} кубометров" if free_capacity < value
     super
   end
 end

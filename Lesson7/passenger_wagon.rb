@@ -7,7 +7,7 @@ class PassengerWagon < Wagon
   end
 
   def to_fill
-    raise "Все места в вагоне уже заняты" if free_capacity == 0
+    raise "Все места в вагоне уже заняты. Вместимость: #{capacity} мест" if free_capacity == 0
     super(CAPACITY_CHANGE_VALUE)
   end
 end
