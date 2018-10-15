@@ -22,7 +22,9 @@ class Station
   end
 
   def validate!
-    raise "Необходимо указать корректное название для станции. Не менее 2-х символов" if name.nil? || name.length < 2
+    if name.nil? || name.length < 2
+      raise "Необходимо указать корректное название для станции. Не менее 2-х символов"
+    end
   end
 
   def train_get(train)

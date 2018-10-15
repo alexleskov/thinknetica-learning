@@ -16,9 +16,13 @@ class Wagon
   end
 
   def validate!
-    raise "Необходимо указать корректное значение для заполнения вагона" if capacity.nil? || capacity <= 0
+    if capacity.nil? || capacity <= 0
+      raise "Необходимо указать корректное значение для заполнения вагона"
+    end
     raise "Необходимо указать корректный номер для вагона" if number.nil? || number <= 0
-    raise "Необходимо указать верный тип для вагона: cargo или passenger" unless %i[cargo passenger].include?(type)
+    unless %i[cargo passenger].include?(type)
+      raise "Необходимо указать верный тип для вагона: cargo или passenger"
+    end
   end
 
   def set_current_train(train)

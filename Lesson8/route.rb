@@ -15,9 +15,15 @@ class Route
   end
 
   def validate!
-    raise "Необходимо указать корректное название для маршрута. Не менее 2-х символов" if name.nil? || name.length < 2
-    raise "Станции должны быть объектом класса Station" if @stations.any? { |station| !station.instance_of?(Station) }
-    raise "Пункт отправления и назначения должны быть разными станциями" if first_station == last_station
+    if name.nil? || name.length < 2
+      raise "Необходимо указать корректное название для маршрута. Не менее 2-х символов"
+    end
+    if @stations.any? { |station| !station.instance_of?(Station) }
+      raise "Станции должны быть объектом класса Station"
+    end
+    if first_station == last_station
+      raise "Пункт отправления и назначения должны быть разными станциями"
+    end
   end
 
   def station_add(station)

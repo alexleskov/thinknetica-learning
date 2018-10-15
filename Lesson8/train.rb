@@ -34,7 +34,9 @@ class Train
   def validate!
     raise "Необходимо указать номер для поезда" if number.nil?
     raise "Необходимо указать корректный формат для номера поезда" if number !~ NUMBER_FORMAT
-    raise "Необходимо указать верный тип для поезда: cargo или passenger" unless %i[cargo passenger].include?(type)
+    unless %i[cargo passenger].include?(type)
+      raise "Необходимо указать верный тип для поезда: cargo или passenger"
+    end
   end
 
   def speed_up(value)
