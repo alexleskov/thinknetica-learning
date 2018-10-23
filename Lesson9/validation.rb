@@ -21,8 +21,6 @@ module Validation
 
       @validations ||= []
       @validations << @validate_attribute
-      
-      #raise "Validation TypeName Error" if attribute_name.nil? || attribute_name.to_s.empty?  
     end 
   end
 
