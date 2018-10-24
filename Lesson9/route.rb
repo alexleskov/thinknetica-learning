@@ -7,6 +7,11 @@ class Route
 
   attr_reader :stations, :name
 
+  validate :name, :presence
+  validate :name, :type, "String"
+  validate :departure, :type, "Station"
+  validate :arrival, :type, "Station"
+
   def initialize(name, departure, arrival)
     @name = name
     @stations = [departure, arrival]
@@ -15,15 +20,8 @@ class Route
   end
 
   def validate!
-    if name.nil? || name.length < 2
-      raise "Необходимо указать корректное название для маршрута. Не менее 2-х символов"
-    end
-    if @stations.any? { |station| !station.instance_of?(Station) }
-      raise "Станции должны быть объектом класса Station"
-    end
-    if first_station == last_station
-      raise "Пункт отправления и назначения должны быть разными станциями"
-    end
+    super
+    raise "Пункт отправления и назначения должны быть разными станциями" if arrival == departure
   end
 
   def station_add(station)
@@ -47,7 +45,11 @@ class Route
     @stations.first
   end
 
+  alias departure first_station
+
   def last_station
     @stations.last
   end
+
+  alias arrival last_station
 end

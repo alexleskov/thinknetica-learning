@@ -10,12 +10,12 @@ class RailRoad
   end
 
   def menu
-    loop do
-      @interface.main_menu
-      input = choice
-      abort if input.zero?
-      menu_cases(input)
-    end
+    # loop do
+    @interface.main_menu
+    input = choice
+    abort if input.zero?
+    menu_cases(input)
+    # end
   end
 
   # Нарушится принцип инкапсуляции.

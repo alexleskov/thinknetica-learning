@@ -13,18 +13,15 @@ class Station
 
   attr_reader :trains, :name
 
+  validate :name, :presence
+  validate :name, :type, "String"
+
   def initialize(name)
     @name = name
     @trains = []
     validate!
     self.class.all << self
     register_instance
-  end
-
-  def validate!
-    if name.nil? || name.length < 2
-      raise "Необходимо указать корректное название для станции. Не менее 2-х символов"
-    end
   end
 
   def train_get(train)

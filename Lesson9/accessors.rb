@@ -16,7 +16,7 @@ module Accessors
     def strong_attr_accessor(name, type)
       accessor_type = type.to_sym
       var_name = "@#{name}".to_sym
-      define_method("#{name}") { instance_variable_get(var_name) }
+      define_method(name.to_s) { instance_variable_get(var_name) }
       define_method("#{name}=") do |data|
         value, type = data
         raise "Некорректный тип инстанс-переменной" if accessor_type != type
@@ -24,7 +24,5 @@ module Accessors
         instance_variable_set(var_name, value)
       end
     end
-
   end
-
 end

@@ -7,6 +7,13 @@ class Wagon
 
   attr_reader :number, :type, :current_train, :capacity, :occupied_capacity
 
+  validate :number, :presence
+  validate :number, :type, "Integer"
+  validate :type, :presence
+  validate :type, :type, "Symbol"
+  validate :capacity, :presence
+  validate :capacity, :type, "Integer"
+
   def initialize(number, capacity, type)
     @number = number
     @type = type
@@ -16,10 +23,7 @@ class Wagon
   end
 
   def validate!
-    if capacity.nil? || capacity <= 0
-      raise "Необходимо указать корректное значение для заполнения вагона"
-    end
-    raise "Необходимо указать корректный номер для вагона" if number.nil? || number <= 0
+    super
     unless %i[cargo passenger].include?(type)
       raise "Необходимо указать верный тип для вагона: cargo или passenger"
     end

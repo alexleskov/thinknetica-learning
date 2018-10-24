@@ -21,6 +21,12 @@ class Train
 
   attr_reader :type, :speed, :number, :wagons
 
+  validate :number, :presence
+  validate :number, :format, NUMBER_FORMAT
+  validate :number, :type, "String"
+  validate :type, :presence
+  validate :type, :type, "Symbol"
+
   def initialize(number, type)
     @number = number
     @speed = 0
@@ -32,8 +38,7 @@ class Train
   end
 
   def validate!
-    raise "Необходимо указать номер для поезда" if number.nil?
-    raise "Необходимо указать корректный формат для номера поезда" if number !~ NUMBER_FORMAT
+    super
     unless %i[cargo passenger].include?(type)
       raise "Необходимо указать верный тип для поезда: cargo или passenger"
     end
