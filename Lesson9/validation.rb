@@ -10,25 +10,24 @@ module Validation
     TYPES = %i[presence format type].freeze
 
     def validate(attribute, validation_type, option = nil)
-      @validate_attribute = { attribute_name: attribute.to_sym, type: validation_type.to_sym,
-                              option: option }
+      @attributes = { name: attribute.to_sym, type: validation_type.to_sym,
+                      option: option }
       check_validate_attribute
       @validations ||= []
-      @validations << @validate_attribute
+      @validations << @attributes
     end
 
     protected
 
     def check_validate_attribute
-      unless TYPES.include?(@validate_attribute[:type])
-        raise "Типа валидации \"#{@validate_attribute[:type]}\" - не существует"
+      unless TYPES.include?(@attributes[:type])
+        raise "Типа валидации \"#{@attributes[:type]}\" - не существует"
       end
-
-      if @validate_attribute[:type] == :format && !@validate_attribute[:option].is_a?(Regexp)
+      if @attributes[:type] == :format && !@attributes[:option].is_a?(Regexp)
         raise "Опция для проверки формата должна иметь класс Regexp"
       end
-      if @validate_attribute[:type] == :type && !@validate_attribute[:option].is_a?(String)
-        raise "Опция для проверки типа должна являться строкой"
+      if @attributes[:type] == :type && !@attributes[:option].is_a?(Class)
+        raise "Опция для проверки типа должна являться классом"
       end
     end
   end
@@ -45,35 +44,39 @@ module Validation
     def validate!
       object = self
 
-      object.class.validations.each do |validate_attribute|
-        attribute_name = validate_attribute[:attribute_name]
-        option = validate_attribute[:option]
+      raise "ValidationError: Validation rules not exist" if object.class.validations.nil?
 
+      object.class.validations.each do |attributes|
+        validate_method = "validate_" + attributes[:type].to_s
+        option = attributes[:option]
         begin
-          instance_attribute = object.send(attribute_name)
+          instance_attribute = object.send(attributes[:name])
         rescue StandardError
-          instance_attribute = nil
+          raise "ValidationError: \"#{instance_attribute}\" don't exist in \"#{object}\""
         end
-        if instance_attribute.nil?
-          raise "ValidationError: \"#{attribute_name}\" don't exist in \"#{object}\""
-        end
+        object.send(validate_method, instance_attribute, option)
+      end
+    end
 
-        case validate_attribute[:type]
-        when :presence
-          if instance_attribute.nil? || instance_attribute.to_s.empty?
-            raise "ValidationError: \"#{attribute_name}\" is nil or empty string in \"#{object}\""
-          end
-        when :format
-          if instance_attribute !~ option
-            raise "ValidationError: \"#{attribute_name}\"
-                  don't match Regexp \"#{option}\" in \"#{object}\""
-          end
-        when :type
-          if instance_attribute.class.to_s != validate_attribute[:option]
-            raise "ValidationError: \"#{attribute_name}\" class
-                  is not a \"#{option}\" in \"#{object}\""
-          end
-        end
+    protected
+
+    def validate_presence(instance_attribute, _option)
+      if instance_attribute.nil? || instance_attribute.to_s.empty?
+        raise "ValidationError: \"#{instance_attribute}\" is nil or empty string in \"#{self}\""
+      end
+    end
+
+    def validate_format(instance_attribute, option)
+      if instance_attribute !~ option
+        raise "ValidationError: \"#{instance_attribute}\"
+               don't match Regexp \"#{option}\" in \"#{self}\""
+      end
+    end
+
+    def validate_type(instance_attribute, option)
+      unless instance_attribute.is_a?(option)
+        raise "ValidationError: \"#{instance_attribute}\" class
+               is not a \"#{option}\" in \"#{self}\""
       end
     end
   end

@@ -1,3 +1,7 @@
+require_relative 'accessors.rb'
+
 module CompanyName
-  attr_accessor :company_name
+  include Accessors
+
+  strong_attr_accessor :company_name, String
 end
