@@ -8,9 +8,9 @@ class Route
   attr_reader :stations, :name
 
   validate :name, :presence
-  validate :name, :type, "String"
-  validate :departure, :type, "Station"
-  validate :arrival, :type, "Station"
+  validate :name, :type, String
+  validate :departure, :type, Station
+  validate :arrival, :type, Station
 
   def initialize(name, departure, arrival)
     @name = name

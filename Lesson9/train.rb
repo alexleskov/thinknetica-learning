@@ -23,9 +23,9 @@ class Train
 
   validate :number, :presence
   validate :number, :format, NUMBER_FORMAT
-  validate :number, :type, "String"
+  validate :number, :type, String
   validate :type, :presence
-  validate :type, :type, "Symbol"
+  validate :type, :type, Symbol
 
   def initialize(number, type)
     @number = number

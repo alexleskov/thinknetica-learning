@@ -8,11 +8,11 @@ class Wagon
   attr_reader :number, :type, :current_train, :capacity, :occupied_capacity
 
   validate :number, :presence
-  validate :number, :type, "Integer"
+  validate :number, :type, Integer
   validate :type, :presence
-  validate :type, :type, "Symbol"
+  validate :type, :type, Symbol
   validate :capacity, :presence
-  validate :capacity, :type, "Integer"
+  validate :capacity, :type, Integer
 
   def initialize(number, capacity, type)
     @number = number
